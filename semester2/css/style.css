@@ -1,0 +1,536 @@
+/*
+
+
+-----DOCUMENTATION-----
+
+### Images without caption ###
+
+Put an image on the right - right E.G. <img src="" class="right" style="width: ... "/>
+Put an image on the left - left E.G. <img src="" class="left"  style="width: ... "/>
+
+### Images with caption ###
+
+In order to have a caption on an image you have first to use a div that will contain the 
+image and the caption. The classes are imgRightWithCaption and imgLeftWithCaption.
+Remeber to use style="width: ...", this will be the width of your image.
+Inside of the div you have to put your img belonging to class captionedImg and after the image
+you have to declare a div of the class caption. Inside the div put your short text.
+
+Example:
+
+<div class="imgRightWithCaption" style="width: 200px"><img class="captionedImg" src="a_beautiful_pic_of_Babbage.jpg"><div class="caption">This is Charles Babbage</div></div>
+
+### Links ###
+
+External link - DO THIS IN HTML WITH <sup></sup> TAGS!!! KEEP THE '#' - E.G. <a href="#"><sup>1</sup></a>
+
+For internal link use <a> tag normally, if your link has a reference to a page in an other section remember to go back in the directories - E.G. <a href="../../VIPs/Babbage.html>Charles Babbage</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+
+
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,600&subset=latin,latin-ext);
+
+html, body{
+ /*font-family: opensans;*/
+ font-family: 'Open Sans', sans-serif;
+ font-size: 12pt;
+ margin:0;
+ padding: 0;
+ min-height: 100%;
+ width: 100%;
+ height: 100%;
+/* min-width: 700px;
+*/ background-color: rgb(230,230,230);
+ text-align: justify;
+}
+
+/*
+.subP {
+    padding-left: 20px;
+    
+}
+
+h1, h2 {
+    text-align: left;
+}
+
+/* Start Calzam work on table */
+
+#content table {
+    border-collapse: 
+    collapse; border-spacing: 0;
+}
+
+#content table, td, th {
+	padding: 5px;
+}
+
+#content td, th {
+	border: 1px solid transparent;
+	transition: all 0.3s;
+	text-align: center;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+}
+	
+#content th{
+	font-weight: bold;
+	background-color: #DFDFDF;
+}
+
+#content td:first-child {
+	border-left: none;
+}
+#content th:first-child {
+	border-left: none;
+}
+
+#content td:last-child {
+	border-right: none;
+}
+#content th:last-child {
+	border-right: none;
+}
+tr:nth-child(even) td { 
+	background: #F1F1F1; 
+}   
+
+tr:nth-child(odd) td {
+	background: #FEFEFE; 
+} 
+tr td:hover { 
+background: #666; color: #FFF; 
+}
+	
+/* End Calzam work */
+
+.selected{
+
+        font-weight: bold;
+
+}
+
+.quotation{
+    font-style: italic;
+    color: rgb(200,200,200);
+    text-align: right;
+}
+
+.clearfix:after{
+	clear: both;
+	visibility: hidden;
+	content: " ";
+	display: block;
+	height: 0px;
+}
+
+.floatLeft{
+	float: left;
+}
+
+.floatRight{
+	float: right;
+}
+
+
+img.right{
+	float: right;
+	margin-left: 25px;
+    margin-bottom: 20px;
+
+}
+
+img.left{
+	float: left;
+	margin-right: 25px;
+    margin-bottom: 20px;
+}
+
+.captionedImg {
+    width: 100%;
+    height: 100%;
+}
+
+.imgRightWithCaption {
+    margin-bottom: 10px;
+    float: right;
+    margin-left: 25px;
+    position: relative;
+}
+
+.imgLeftWithCaption {
+    margin-bottom: 10px;
+    float: left;
+    margin-right: 25px;
+    position: relative;
+}
+
+.imgWithCaption {
+    margin-bottom: 10px;
+    margin-right: 25px;
+    position: relative;
+    
+}
+
+.youvideo {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.caption{
+    width: 98%;
+    bottom: 5px;
+    padding: 0% 1.5% 0% 3%;
+    color: white;
+    background-color: rgba(130,130,130,0.9);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+}
+
+
+
+.caption sup{
+	color: white;
+}
+ 
+
+
+
+#contentContainer{
+	margin-top: 80px;
+	padding-bottom: 70px;
+}
+
+/*Columns*/
+
+#content{
+	width: 77%;
+	padding: 30px 2%;
+	background-color: rgba(255,255,255,0.7);
+	box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.4);
+	margin: 0 auto;
+    min-width: 700px; /* Because of problem with youtube video if page is squizzed */
+}
+
+
+
+a{                  /* Attributes of INTERNAL links*/                
+    color: rgb(0, 140, 232);
+    text-decoration: underline;
+<<<<<<< HEAD
+}
+
+a:hover{
+    color: rgb(0, 186, 232);
+    text-decoration: none;
+}
+
+=======
+}
+
+a:hover{
+    color: rgb(0, 186, 232);
+    text-decoration: none;
+}
+
+>>>>>>> VincenzoFerme/gh-pages
+a:visited{
+    color: rgb(98, 19, 102);
+    text-decoration: underline;
+}
+/*a[href^="#"]*/
+sup{        /*Remove underline from the sup numbers*/
+    display:inline-block;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
+
+/*Footer*/
+#wrapper{
+	min-height: 100%;
+	position: relative;
+	width: 100%;
+}
+
+footer {
+	position: relative;
+	bottom: 0;
+	width: 100%;
+	height: 55px;
+	color: #fff;
+	text-indent: 10px;
+	vertical-align: middle;
+} 
+
+footer address{
+	display: block;
+    margin: 1em 0;
+}
+
+/*Navigation bar*/
+
+#navigation, footer{
+	background-color: rgba(130,130,130,0.9);
+    width: 100%;
+    
+}
+
+#navigation {
+    top: 0px;
+    z-index:9999;
+    position: fixed;
+
+}
+
+
+#navigation ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	width: 100%;
+	text-align: center;
+}
+
+#navigation ul li {
+	display: inline-block;
+	width: 110px;
+	min-width: 100px;
+	text-align: center;
+}
+
+#navigation ul li a {
+	display: block;
+	padding: 9px;
+	text-decoration: none;
+	color: #FFF;
+}
+
+#navigation ul li a:hover {
+	background-color: rgb(230,230,230);
+	color: black;
+}
+*/
+
+
+#grid {
+	width: 100%;
+	height: 500px;
+}
+
+#grid > #topRow {
+	width: 100%;
+	height: 250px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#grid > #bottomRow {
+	width: 100%;
+	height: 250px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#grid > #topRow > a {
+	width: 50%;
+	height: auto;
+	min-width: 400px;
+	flex-grow: 1;
+	background: #ccc;
+	border-radius: 10px;
+	display: flex;
+	text-decoration: none;
+}
+
+#grid > #bottomRow > a{
+	width: auto;
+	min-width: 400px;
+	height:auto;
+	flex-grow: 1;
+	background: #ccc;
+	border-radius: 10px;
+	display: flex;
+	text-decoration: none;
+}
+
+#grid > #topRow > a > #hardware{
+	flex-basis: 100%;
+	background: url("img/hardware.jpg") no-repeat 50% 50%;
+	background-size: cover;
+}
+
+#grid > #topRow > a > #software{
+	flex-basis: 100%;
+	background: url("img/software.jpg") no-repeat 50% 50%;
+	background-size: cover;
+}
+
+#grid > #bottomRow > a > #internet{
+	flex-basis: 100%;
+	background: url("img/internet.jpg") no-repeat 50% 50%;
+	background-size: cover;
+}
+
+#grid > #bottomRow > a > #games{
+	flex-basis: 100%;
+	background: url("img/games.jpg") no-repeat 50% 50%;
+	background-size: cover;
+}
+
+#grid > #topRow > div{
+	width: 100%;
+	height: 100%;
+}
+
+#grid > #bottomRow > div{
+	width: 100%;
+	height: 100%;
+}
+
+#grid p{
+	color: rgb(242, 89, 0);
+	font-weight: bold;
+	text-align: center;
+	font-size: 30px;
+	text-decoration: none;
+}
+/*External links*/
+
+
+.externalLinks{
+	font-style: italic;
+	font-size: 10pt;
+    
+}
+
+.externalLinks a{
+	color: #101010;
+    text-decoration: none;
+    
+}
+
+
+
+
+.gridContainer {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 77%;
+  padding: 10px 2%;
+  background-color: rgba(255,255,255,0.7);
+  box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.4);
+}
+
+
+.row {
+	display: -webkit-box;
+  	display: -moz-box;
+  	display: -ms-flexbox;
+  	display: -webkit-flex;
+  	display: flex; 
+  	-webkit-flex-basis: 100%;
+  	flex-basis: 100%;
+  	-webkit-justify-content: space-between;
+  	justify-content: space-between;
+
+}
+.col-50 {
+	-webkit-flex-basis: 50%;
+  	flex-basis: 50%;
+  	margin: 0 5px 0 5px;
+}
+
+img{
+width: 100%;
+}
+
+.col-23 {
+	flex-grow: 2/3;
+	-webkit-flex-grow: 2/3;
+	-webkit-flex-basis: 66.66667%;
+  	flex-basis: 66.66667%;
+   	margin: 0 5px 0 5px;
+
+	
+}
+
+.col-13 {
+	flex-grow: 1/3;
+	-webkit-flex-grow: 1/3;
+	-webkit-flex-basis: 33.33333%;
+  	flex-basis: 33.33333%;
+  	margin: 0 5px 0 5px;
+
+}
+
+.col-full {
+	-webkit-flex-basis: 100%;
+	flex-basis: 100%;
+
+}
+
+
+@media all and (max-width: 1100px){
+	.row{ 
+		-webkit-flex-direction: column; 
+ 		 flex-direction: column; 
+
+	}
+
+}
+
+
+.image{
+    overflow: hidden;
+    position: relative;
+}
+
+.image .caption {
+   position: absolute;
+   overflow: hidden;
+   background-color: rgba(0, 0, 0, 0.7);
+   top: 100%;
+   -webkit-transition: all 0.3s ease-out 0.5s;
+   transition: all 0.3s ease-out 0.5s;
+}
+
+.image:hover .caption {
+   top: 73%;
+   -webkit-transition-delay: 0s;
+   transition-delay: 0s;
+}
+.image div{
+	margin: 0;
+    padding: 6px;
+}
+

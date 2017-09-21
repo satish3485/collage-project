@@ -1,0 +1,32 @@
+a{                                
+    color: rgb(130,130,130);
+}
+
+a:hover{
+
+	font-weight:bold;
+	color: rgb(80,80,80);
+}
+
+#navigation ul li a:hover {
+	transform:rotate(2160deg);
+	transition-duration: 0.5s;
+}
+
+a:visited{
+	color: rgb(93,1,132);
+}
+
+.externalLinks a{
+	color: rgb(20,20,20);
+    text-decoration: none;
+    
+}
+
+.externalLinks a:hover{
+	color: rgb(80,80,80)
+}
+
+.externalLinks a:visited{
+	color:rgb(93,1,132);
+}

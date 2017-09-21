@@ -1,0 +1,41 @@
+a{                                
+    color: red;
+}
+
+a:hover{
+	color: blue;
+}
+
+
+#navigation ul li a {
+	display: block;
+	padding: 9px;
+	text-decoration: none;
+	color: #FFF;
+}
+
+#navigation ul li a:hover {
+	background-color: white;
+	color: black;
+	text-decoration: underline;
+	transition-duration: 0.5s;
+}
+
+a:visited{
+	color: green;
+}
+
+.externalLinks a{
+	color: rgb(20,20,20);
+    text-decoration: none;
+    
+}
+
+.externalLinks a:hover{
+	color: rgb(80,80,80);
+	text-decoration: underline;
+}
+
+.externalLinks a:visited{
+	color:green;
+}
