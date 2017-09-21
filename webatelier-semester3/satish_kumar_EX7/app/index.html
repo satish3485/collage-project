@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0">
+  <title>Atelier Beats</title>
+  <link rel="stylesheet" href="css/standardize.css">
+
+  <script src="components/webcomponentsjs/webcomponents-lite.js"></script>
+
+  <!-- opt-in for shadow dom -->
+  <script>
+    window.Polymer = window.Polymer || {};
+    window.Polymer.dom = 'shadow';
+  </script>
+
+
+  <!-- shared styles for all modules -->
+  <link rel="import" href="styles/shared-styles.html">
+   
+  <style is="custom-style" include="shared-styles"></style>
+  <!-- This file contains theming for your app -->
+  <link rel="import" href="styles/app-theme.html">
+  
+  <link rel="import" href="elements/ab-app/ab-app.html">
+
+</head>
+<body>
+  <ab-app>
+
+  </ab-app>
+</body>
+</html>

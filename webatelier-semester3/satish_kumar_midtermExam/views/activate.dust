@@ -1,0 +1,23 @@
+ <section class="flex-tracklist" id="tracks-list">
+      <div class="fl-tl-thead fl-tl-row">
+      <div class="fl-tl-th fl-tl-artist">Action</div>
+      <div class="fl-tl-th fl-tl-album">target</div>
+      <div class="fl-tl-th fl-tl-time">Date</div>
+      </div>
+    
+      {#active}
+       
+        <div id="{_id}" class="fl-tl-row forbind" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)">
+        
+       <div class="fl-tl-cell fl-tl-artist"><span  onClick="drawer(event)" data-for="{_id}" href="{target}">{Action}</span></div>
+
+        <div class="fl-tl-cell fl-tl-album"><span  onClick="drawer(event)" data-for="{_id}" href="{target}">{name}</span></div>
+
+      
+
+        <div class="fl-tl-th222 fl-tl-tt">{timestamp}</div>
+
+		  <div class="fl-tl-th2222 fl-tl-delete"><a href="{_id}">&times;</a></div></div>
+
+      {/active}
+      </section>

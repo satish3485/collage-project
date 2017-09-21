@@ -1,0 +1,23 @@
+{~lb}
+  render: function(context, callback) {~lb}
+    if(callback || typeof context === 'function') {~lb}
+      if(!callback && typeof context === 'function') {~lb}
+        callback = context;
+        context = {~lb}{~rb};
+      {~rb}
+      dust.render("{name|s}", context || {~lb}{~rb}, callback);
+      return;
+    {~rb}
+    dust.renderAsync = Q.nfbind(dust.render);
+    return dust.renderAsync("{name|s}", context || {~lb}{~rb});
+  {~rb},
+
+  renderSync: function(context) {~lb}
+    var output;
+    dust.render("{name|s}", context || {~lb}{~rb}, function(error, html) {~lb}
+      if(error) throw error;
+      output = html;
+    {~rb});
+    return output;
+  {~rb}
+{~rb}

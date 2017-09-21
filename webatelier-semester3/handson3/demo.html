@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset=utf-8>
+<meta name="viewport" content="width=620">
+<title>HTML5 APIs Handson</title>
+<link rel="stylesheet" href="resources/qunit.css">
+<script src="resources/modernizr-custom.js"></script>
+<script src="http://html5demos.com/js/h5utils.js"></script>
+<script src="script.js" type="text/javascript"></script>
+<script src="resources/qunit.js"></script>
+<style>
+
+#wrapper {
+  width: 600px;
+  margin: 10px auto;
+  padding: 1px 7px 30px 7px;
+  background: #CEE1D7;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 3px 1px rgba(10,10,10,0.3);
+}
+
+#wrapper h1{
+  font-family: "Century Gothic", "Helvetica", sans-serif;
+  font-size: 32px;
+  line-height: 0.7;
+  color: #7C8781;
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, .3), 0px -1px 0px rgba(0, 0, 0, .8);
+}
+
+canvas#html5logo{
+  background: #fff;
+}
+
+#dropTarget {
+  font-size: .9em;
+  font-family: "MS Sans Serif", sans;
+  height: 150px;
+  width: 220px;
+  position: relative;
+  background-color: blue;
+  color:white;
+}
+
+#drag1 {
+  width: 50px;
+  height: 50px;
+}
+#drag2 {
+  width: 50px;
+  height: 50px;
+}
+#drag3 {
+  width: 50px;
+  height: 50px;
+}
+#drag4 {
+  width: 50px;
+  height: 50px;
+}
+</style>
+
+<script>
+
+</script>
+
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+<!--Canvas Demo-->
+<section id="wrapper">
+    <header>
+      <h1>Canvas</h1>
+    </header>
+
+  <article>
+    <canvas id="html5logo" width="300" height="400"></canvas>
+    <script>
+        //Task 1:
+        var canv = document.getElementById('html5logo').getContext('2d');
+        var i = new Image();
+        i.onload = function(){
+          for(var x=0;x<3;x++){
+            for (var y =0;y<4;y++){
+              canv.drawImage(i,100*x,y*100,100,100);
+            }
+          }
+        }
+        i.src = "http://www.w3.org/html/logo/downloads/HTML5_Logo_256.png";
+      
+      
+      
+    </script>
+
+  </article>
+</section>
+
+<!--Web Storage Demo-->
+<section id="wrapper">
+    <header>
+      <h1>Web Storage</h1>
+    </header>
+
+  <article>
+     <p>Store your first and last name in your local storage as you type in the following textboxes:</p>
+
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" onkeyup="storeFirstName()"/><br/>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" onkeyup="storeLastName()"/><br/>
+
+    <button onclick="showStorage()">Display local Storage</button> <br/>
+
+    <label for="firstNameDisplay">First Name:</label>
+    <input type="text" id="firstNameDisplay" disabled="disabled"/> <br/>
+    <label for="lastNameDisplay">Last Name:</label>
+    <input type="text" id="lastNameDisplay" disabled="disabled" />
+
+    <script>
+      //Task 2:
+      var storeFirstName = function(){
+        var myvalue = document.getElementById("firstName").value;
+        localStorage.setItem("userFirstName",myvalue);
+
+      }
+    var storeLastName = function(){
+        var myvalue = document.getElementById("lastName").value;
+        localStorage.setItem("userlastName",myvalue);
+
+      }
+
+
+    function showStorage() {
+      var myFirstName = localStorage.getItem("userFirstName");
+      var myLastName = localStorage.getItem("userlastName");
+      document.getElementById("firstNameDisplay").value = myFirstName;
+      document.getElementById("lastNameDisplay").value = myLastName;
+    }
+    </script>
+<!--Drag and Drop Demo-->
+<section id="wrapper">
+    <header>
+      <h1>Drag and Drop</h1>
+    </header>
+
+ 	<article>
+		<img id="drag1" draggable="true" src="img/fancy_numbers_fonts_clipart_font1_0_NifterDotCom.gif" alt="Zero"/>
+		<img id="drag2" draggable="true" src="img/fancy_numbers_fonts_clipart_font1_1_NifterDotCom.gif" alt="One"/>
+		<img id="drag3" draggable="true" src="img/fancy_numbers_fonts_clipart_font1_2_NifterDotCom.gif" alt="Two"/>
+		<img id="drag4" draggable="true" src="img/fancy_numbers_fonts_clipart_font1_3_NifterDotCom.gif" alt="Three"/>
+		<div id="dropTarget"><span>Drag one of the images and drop it here.</span></div>
+    <img id="1" src="path/to/src">
+		<script>
+    	//Task 3:
+    
+      var ids = ["drag1","drag2","drag3","drag4","drag5"].forEach(function(e){
+        var dom = document.getElementById(e);
+        dom.dragstart = function(){
+          '<img id="'+ this.id + '" src="' + this.src  +'" alt="'+this.getAtribute("alt") + '"/>'
+        }
+      })
+		</script>
+ 	</article>
+</section>
+
+</body>
+</html>

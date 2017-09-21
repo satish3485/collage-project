@@ -1,0 +1,17 @@
+<section class="artist-section">
+	<ul class="grid-list clearfix" id="artists-list">
+	<span id="favorite"><i class="glyphiconsss" onclick="showsssArtist()"></i>Show only favorite</span> 
+		{#artists}
+		<li>
+			<span class="delete-btn"><a href="artists/{_id}">&times;</a></span>
+			<div class="media-object">
+				<div class="mo-image" style="background-image: url({artwork})"></div>
+				<div class="mo-overlay"></div>
+			</div>
+			<div class="mo-info"><a class="artist-link" href="artists/{_id}">{name}</a>
+			<span id="favorites"><i class="glyphiconss {like}" onclick="showss(event)" like="{like}" href="artists/{_id}"></i>Liked: {like}</span>
+			</div>
+		</li>
+		{/artists} 
+	</ul>
+</section>	

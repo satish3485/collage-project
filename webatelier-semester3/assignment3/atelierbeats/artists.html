@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0">
+  <title>Artists - Atelier Beats</title>
+  <link rel="stylesheet" href="css/standardize.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/glyphicons.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body class="body">
+  <div class="container main-wrapper pageContainer">
+    <nav id="main-nav" class="main-nav-float">
+       <label id="main-menu-toggle-label" for="main-menu-toggle"><i class="fa fa-bars"></i></label>
+       <input type="checkbox" id="main-menu-toggle"> 
+       <h2 class="fat logo">AtelierBeats.</h2>
+
+       <div class="main-nav-content">
+        <ul id="main-menu" class="nav-menu">
+          <li class="search-item" onkeyup="search()">
+            <span class="nav-menu-icon search-icon glyphicon glyphicon-search"></span>
+            <input id="main-search" placeholder="Search" type="search" class="nav-menu-search">
+          </li>
+          <li><a href="library.html"><i class="nav-menu-icon glyphicon glyphicon-music"></i>Library</a></li>
+          <li><a href="artists.html"><i class="nav-menu-icon fa fa-users"></i>Artists</a></li>
+          <li><a href="albums.html"><i class="nav-menu-icon icons8-music-record"></i>Albums</a></li>
+          <li class="mm-user-item"><a href="login.html"><i class="nav-menu-icon fa fa-user"></i>triglian</a></li>
+          <li class="mm-user-item"><a href="login.html"><i class="nav-menu-icon fa fa-sign-out"></i>logout</a></li>
+        </ul>
+       
+       <a href="#" class="create-playlist" id="create-pl-btn"><i class="fa fa-plus"></i> new playlist</a>
+        <ul class="nav-menu" id="playlists">
+        </ul>
+      </div> <!-- /.main-nav-content -->
+    </nav>
+    <section class="main-content main-content-float-menu clearfix">
+      <nav class="clearfix" id="user-nav">
+        <ul class="nav-menu horizontal-menu float-right">
+          <li><a href="#">triglian</a></li>
+          <li><a href="login.html">logout</a></li>
+        </ul>
+      </nav>
+      <section class="artist-section" id="artists">
+        <!-- Artists will be rendered here -->
+      </section>
+    </section>
+  </div>
+  <script src="js/library.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

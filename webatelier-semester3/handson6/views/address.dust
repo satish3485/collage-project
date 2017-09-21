@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{title}</title>
+    <link rel='stylesheet' href='/css/style.css' />
+    <script src="/js/address-ui.js"></script>
+    <script src="/js/dust-core.min.js"></script>
+  </head>
+  <body>
+    <h1>Address Book</h1>
+    <div class="lighter">
+      <form id="search" action="/address" method="get">
+        <span>
+          <input type="text" name="firstname" id="firstname" class="search img square" placeholder="Firstname" />
+          <input type="text" name="lastname" id="lastname" class="search lastname square" placeholder="Lastname" />
+          <input id="searchbutton" type="submit" value="Search" />
+        </span>
+      </form>
+	</div>
+	<div id="addresses">
+      <h1 class="address-heading">{title}</h1>
+	  <ul class="address-book" id="address-book">
+	  {#contacts}
+	      <li class="address-record">
+	        <i data-id="{_id}" class="delete">&times;</i>
+	        <span class="address-title">{firstname} {lastname}</span>
+	        <dl>
+	          <dt class="address-field">email:</dt>
+	          <dd class="address-value">{email}</dd> <br />
+	          <dt class="address-field">homepage:</dt>
+	          <dd class="address-value">
+	            <a href="{homepage}">{homepage}</a>
+	          </dd>
+	        </dl>
+	      </li>
+	  {/contacts}
+	  </ul>
+	</div>
+  </body>
+</html>

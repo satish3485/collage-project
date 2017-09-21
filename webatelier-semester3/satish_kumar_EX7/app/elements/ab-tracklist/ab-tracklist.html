@@ -1,0 +1,298 @@
+<link rel="import" href="../../components/polymer/polymer.html">
+<link rel="stylesheet" href="../../css/standardize.css">
+<link rel="import" href="../../elements/routing.html">
+<link rel="import" href="../../js/utils.js">
+<script type="text/javascript" src="../../js/utils.js"></script>
+<dom-module id="ab-tracklist">
+  <style>
+      .flex-tracklist {
+          width: 100%;
+          font-weight: 500;
+        }
+
+        .fl-tl-row{
+          display:flex;
+          width:100%;
+          border-bottom: 1px solid #BEBEBE;
+        }
+
+        .fl-tl-row:hover .fl-tl-cell {
+          background: #CECED1;
+        }
+
+        .fl-tl-th {
+          border-top: 0;
+          letter-spacing: 1px;
+          line-height: 28px;
+          text-transform: uppercase;
+          font-weight: bold;
+        }
+        
+
+        .fl-tl-th, .fl-tl-cell{
+          flex:1;
+          padding: 0 0 0 12px;
+        }
+        
+
+        .fl-tl-cell{
+          height: 40px;
+          line-height:40px;
+        }
+
+        .fl-tl-cell, .fl-tl-cell>div {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .tl-number, .tl-empty, .tl-play {
+          width: 40px;
+        }
+
+        .fl-tl-time {
+         
+          text-align: right;
+          width: 78px;
+          
+          flex:1;
+          padding: 0 5px 0 12px;
+        }
+
+        @media (max-width: 640px) {
+          .fl-tl-thead{
+            display:none;
+          }
+
+          .fl-tl-row{
+            flex-wrap: wrap;
+            position:relative;
+            padding-bottom: 5px;
+          }
+
+          .fl-tl-cell{
+            height:auto;
+            line-height:1;
+            flex: 0 0 100%;
+          }
+
+          .fl-tl-time{
+            font-size: 12px;
+            position:absolute;
+            right:5px;
+            top: 5px;
+          }
+          .fl-tl-row:hover{
+            background: #CECED1;
+          }
+          .fl-tl-name{
+            height:24px;
+            line-height:24px;
+          }
+
+          .fl-tl-name a{
+            color: #a44b4d;
+          }
+
+          .fl-tl-artist, .fl-tl-album{
+            font-size: 12px;
+            flex: 0 0 auto;
+            height:12px;
+            line-height:12px;
+          }
+
+          .fl-tl-album a{
+            color: rgb(162,162,162);
+            font-weight: 300;
+          }
+          #user-nav{
+            display: none;
+          }
+
+
+        }
+
+        /* ---------------- Library table ---------------- */
+
+        .tracklist {
+          table-layout: fixed;
+          width: 100%;
+          font-weight: 500;
+        }
+
+        .tl-row:hover .tl-cell {
+          background: #CECED1;
+        }
+        
+
+        th {
+          text-align: left;
+        }
+
+        .tl-header, .tl-time {
+          border-top: 0;
+          letter-spacing: 1px;
+          line-height: 28px;
+          text-transform: uppercase;
+          vertical-align: bottom;
+        }
+
+        .tl-header, .tl-time, .tl-cell {
+        padding: 0 0 0 12px;
+        border-top: 1px solid #BEBEBE;
+        position: relative;
+        }
+
+        .tl-time{
+          padding: 0 5px 0 12px;
+        }
+
+        .tl-cell, .tl-cell>div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        }
+
+        .tl-cell {
+        background: #F0F0F0;
+        height: 40px;
+        }
+
+        .tl-number, .tl-empty, .tl-play {
+          width: 40px;
+        }
+
+        .tl-time {
+          text-align: right;
+          width: 78px;
+          padding: 0 5px 0 12px;
+        }
+        
+      
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+          }
+          #user-nav{
+             background: #a44b4d;
+             width:100%;
+             height:60px;
+             }
+
+             ul.nav-menu{
+             margin: 0;
+             padding: 0;
+             list-style: none;
+             line-height: 60px;
+             color: #f7f7f7;
+             }
+
+             ul.horizontal-menu li{
+             float: left;
+             }
+
+             ul.nav-menu li > a {
+             display: block;
+             outline: none;
+             text-decoration: none;
+             box-shadow: inset 0 -1px rgba(0,0,0,0.2);
+             text-shadow: 0 0 1px rgba(255,255,255,0.1);
+             font-size: 1.4em;
+             color: #f7f7f7;
+             -webkit-transition: background 0.3s, box-shadow 0.3s;
+             -moz-transition: background 0.3s, box-shadow 0.3s;
+             transition: background 0.3s, box-shadow 0.3s;
+             overflow:hidden;
+             white-space: nowrap;
+             }
+
+             ul.nav-menu li:first-child a, .search-item{
+             box-shadow: inset 0 -1px rgba(0,0,0,0.2), inset 0 1px rgba(0,0,0,0.2);
+             }
+
+             ul.nav-menu li a:hover, .search-item:hover {
+             background: rgba(0,0,0,0.2);
+             box-shadow: inset 0 -1px rgba(0,0,0,0);
+             }
+
+             ul.nav-menu.horizontal-menu li > a{
+             padding: 0 20px;
+             box-shadow: inset -1px 0 rgba(0,0,0,0.2);
+             }
+
+             ul.nav-menu.horizontal-menu li:first-child > a{
+             box-shadow: inset -1px 0 rgba(0,0,0,0.2), inset 1px 0px rgba(0,0,0,0.2);
+             }
+
+             ul.nav-menu.horizontal-menu.float-right li:last-child > a{
+             box-shadow: none;
+             }
+
+             ul.nav-menu.horizontal-menu li > a:hover{
+             background: rgba(0,0,0,0.2);
+             box-shadow: inset 1px 0px rgba(0,0,0,0);
+             }
+
+             .float-right{
+                float:right;
+             }
+        
+</style>
+  <template >
+      <nav id="user-nav" class="clearfix">
+
+        <ul class="nav-menu horizontal-menu float-right clearfix">
+          <li><a href="#">triglian</a></li>
+          <li><a href="login.html">logout</a></li>
+        </ul>
+      </nav>
+      
+      <iron-ajax
+             auto
+             url="/{{value}}"
+             handle-as="json"
+             last-response="{{data}}"
+             on-response="_onDataChange">
+      </iron-ajax>
+         <div class="fl-tl-thead fl-tl-row">
+             <div class="fl-tl-th fl-tl-name">Song</div>
+             <div class="fl-tl-th fl-tl-artist">Artist</div>
+             <div class="fl-tl-th fl-tl-album">Album</div>
+             <div class="fl-tl-th fl-tl-time">Time</div>
+         </div>
+      <template is="dom-repeat" items="{{data}}" as="item">
+         <div class="fl-tl-row">
+           <div class="fl-tl-cell fl-tl-name">[[item.name]]</div>
+           <div class="fl-tl-cell fl-tl-artist">[[item.artist.name]]</div>
+           <div class="fl-tl-cell fl-tl-album">[[item.album.name]]</div>
+            
+           <div class="fl-tl-cell fl-tl-time">{{timerrr(item.duration)}}</div>
+         </div>
+       
+      </template>
+  
+  
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'ab-tracklist',
+        _onDataChange:function(){
+           
+        },
+       timerrr: formatTime
+        
+      });
+
+    
+    })();
+  </script>
+
+</dom-module>

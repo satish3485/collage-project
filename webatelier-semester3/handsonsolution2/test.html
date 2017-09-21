@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset=utf-8>
+<meta name="viewport" content="width=620">
+<title>HTML5 APIs Handson</title>
+<link rel="stylesheet" href="resources/qunit.css">
+<script src="http://html5demos.com/js/h5utils.js"></script>
+<script src="script.js" type="text/javascript"></script>
+<script src="resources/qunit.js"></script>
+<style>
+
+#wrapper {
+  width: 600px;
+  margin: 10px auto;
+  padding: 1px 7px 30px 7px;
+  background: #CEE1D7;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 3px 1px rgba(10,10,10,0.3);
+}
+
+#wrapper h1{
+  font-family: "Century Gothic", "Helvetica", sans-serif;
+  font-size: 32px;
+  line-height: 0.7;
+  color: #7C8781;
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, .3), 0px -1px 0px rgba(0, 0, 0, .8);
+}
+
+canvas#html5logo{
+  background: #fff;
+}
+
+#dropTarget {
+  font-size: .9em;
+  font-family: "MS Sans Serif", sans;
+  height: 150px;
+  width: 220px;
+  position: relative;
+  background-color: blue;
+  color:white;
+}
+
+#drag1 {
+  width: 50px;
+  height: 50px;
+}
+#drag2 {
+  width: 50px;
+  height: 50px;
+}
+#drag3 {
+  width: 50px;
+  height: 50px;
+}
+#drag4 {
+  width: 50px;
+  height: 50px;
+}
+</style>
+
+<script>
+//Task 2 tests
+test( "Task 2 Tests", function() {
+  equal(vincent.name, "Vincent", "The name field in the variable vincent should be Vincent.");
+  equal(vincent.surname, "Law", "The surname field in the variable vincent should be Law.");
+  equal(vincent.id, "0724FGARK", "The id field in the variable vincent should be 0724FGARK.");
+});
+
+test( "Task 3 Tests", function() {
+  equal(rel.name, "Rel", "The name field in the variable rel should be Rel.");
+  equal(rel.surname, "Mayer", "The surname field in the variable rel should be Mayer.");
+  equal(rel.id, "Real124C41", "The id field in the variable rel should be Real124C41.");
+});
+
+test( "Task 4 Tests", function() {
+  equal(vincent.hi(), "Hello Vincent Law", "The function hi in the variable vincent should return Hello Vincent Law")
+  equal(rel.hi(), "Hello Rel Mayer", "The function hi in the variable rel should return Hello Rel Mayer")
+});
+
+test( "Task 5 Tests", function() {
+  equal(vincent2.name, "Vincent", "The name field in the variable vincent2 should be Vincent.");
+  equal(vincent2.surname, "Law", "The surname field in the variable vincent2 should be Law.");
+  equal(vincent2.id, "0724FGARK", "The id field in the variable vincent2 should be 0724FGARK.")
+  equal(vincent2.hi(), "Hello Vincent Law", "The function hi in the variable vincent2 should return Hello Vincent Law")
+
+  equal(rel2.name, "Rel", "The name field in the variable rel2 should be Rel.");
+  equal(rel2.surname, "Mayer", "The surname field in the variable rel2 should be Mayer.");
+  equal(rel2.id, "Real124C41", "The id field in the variable rel2 should be Real124C41.");
+  equal(rel2.hi(), "Hello Rel Mayer", "The function hi in the variable rel2 should return Hello Rel Mayer")
+});
+
+test( "Task 6 Tests", function() {
+  equal(raul.name, "Raul", "The name field in the variable raul should be Raul.");
+  equal(raul.surname, "Creed", "The surname field in the variable raul should be Creed.");
+  equal(raul.id, "123456", "The id field in the variable raul should be 123456.");
+  equal(raul.hi(), "Hello Raul Creed", "The function hi in the variable raul should return Hello Raul Creed")
+  equal(raul.coding(), "Raul likes JavaScript", "The function hi in the variable raul should return Raul likes JavaScript")
+});
+
+test( "Task 7 Tests", function() {
+  equal(raul2.age, undefined, 'The age field in the variable raul2 is not private')
+  equal(raul2.getAge(), 21, "The getAge function in the developer constructor doesn't return the age properly")
+  equal(raul2.setAge(25), undefined, "The setAge function in the developer constructor isn't defined or it doesn't behave properly")
+  equal(raul2.getAge(), 25, "The getAge function in the developer constructor doesn't return the age properly")
+  equal(raul2.printAge(), "Raul is 25yo", "The printAge function in the developer constructor doesn't return correctly: 'Raul is 25yo'")
+});
+
+test( "Task 8 Tests", function() {
+  equal(Person.prototype.isPrototypeOf(vincent3), true, 'vincent3 should be an instance of Person')
+  equal(vincent3.name, "Vincent", "The name field in the variable vincent3 should be Vincent.");
+  equal(vincent3.surname, "Law", "The surname field in the variable vincent3 should be Law.");
+  equal(vincent3.id, "0724FGARK", "The id field in the variable vincent3 should be 0724FGARK.")
+  equal(vincent3.hi(), "Hello Vincent Law", "The function hi in the variable vincent3 should return Hello Vincent Law")
+
+  equal(Person.prototype.isPrototypeOf(rel3), true, 'rel3 should be an instance of Person')
+  equal(rel3.name, "Rel", "The name field in the variable rel3 should be Rel.");
+  equal(rel3.surname, "Mayer", "The surname field in the variable rel3 should be Mayer.");
+  equal(rel3.id, "Real124C41", "The id field in the variable rel3 should be Real124C41.");
+  equal(rel3.hi(), "Hello Rel Mayer", "The function hi in the variable rel3 should return Hello Rel Mayer")
+});
+
+
+test( "Task 9 Tests", function() {
+  equal(Person.prototype.isPrototypeOf(raul3), true, 'raul3 should be an instance of Person')
+  equal(Developer.prototype.isPrototypeOf(raul3), true, 'raul3 should be an instance of Developer')
+  equal(raul3.name, "Raul", "The name field in the variable raul3 should be Raul.");
+  equal(raul3.surname, "Creed", "The surname field in the variable raul3 should be Creed.");
+  equal(raul3.id, "123456", "The id field in the variable raul3 should be 123456.");
+  equal(raul3.hi(), "Hello Raul Creed", "The function hi in the variable raul3 should return Hello Raul Creed")
+  equal(raul3.coding(), "Raul likes JavaScript", "The function hi in the variable raul3 should return Raul likes JavaScript")
+});
+
+test( "Task 10 Tests", function() {
+  equal(Person.prototype.isPrototypeOf(raul4), true, 'raul4 should be an instance of Person')
+  equal(Developer.prototype.isPrototypeOf(raul4), true, 'raul4 should be an instance of Developer')
+  equal(raul4.age, undefined, 'The age field in the variable raul4 is not private')
+  equal(raul4.getAge(), 21, "The getAge function in the Developer constructor doesn't return the age properly")
+  equal(raul4.setAge(25), undefined, "The setAge function in the Developer constructor isn't defined or it doesn't behave properly")
+  equal(raul4.getAge(), 25, "The getAge function in the Developer constructor doesn't return the age properly")
+  equal(raul4.printAge(), "Raul is 25yo", "The printAge function in the Developer constructor doesn't return correctly: 'Raul is 25yo'")
+});
+
+</script>
+
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+
+</body>
+</html>

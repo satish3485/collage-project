@@ -1,0 +1,1582 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0">
+  <title>Test - Atelier Beats</title>
+  <link rel="stylesheet" href="resources/qunit.css">
+</head>
+<body>
+  <script src='js/script.js'></script>
+  <script src="js/model_prototype.js"></script>
+  <script src="js/model_literals.js"></script>
+  <script src="resources/qunit.js"></script>
+  <script src="resources/sinon.js"></script>
+  <script src="resources/sinon-qunit.js"></script>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script>
+
+  var exampleDate = Date.now().toString()
+
+  test( "Exercise 1.1: Prototype Artist Constructor", function(){
+    //all fields
+    var date = exampleDate
+    var petrucci = {
+      'name': 'John Petrucci',
+      'artwork': 'www',
+      'genre': 'metal',
+      '_id': '1',
+      'date_created': date
+    }
+
+    var petrucciArtist = new Artist(petrucci._id, petrucci.name, petrucci.genre, petrucci.artwork, petrucci.date_created)
+    
+    //prototype
+    notEqual(Artist, undefined)
+    notEqual(Artist.prototype.toObject, undefined)
+    notEqual(Artist.prototype.toJSON, undefined)
+
+    //object prototype
+    equal(Artist.prototype.isPrototypeOf(petrucciArtist), true)
+
+    //public variables
+    equal(petrucciArtist.name, petrucci.name)
+    equal(petrucciArtist.artwork, petrucci.artwork)
+    
+    //private variables
+    equal(petrucciArtist._genre, undefined)
+    equal(petrucciArtist._id, undefined)
+    equal(petrucciArtist._date_created, undefined)
+
+    //public methods
+    notEqual(petrucciArtist.toJSON, undefined)
+    notEqual(petrucciArtist.toObject, undefined)
+    notEqual(petrucciArtist.getGenreString, undefined)
+    notEqual(petrucciArtist.getDateCreatedString, undefined)
+    notEqual(petrucciArtist.getId, undefined)
+
+    //methods invokation results
+    equal(petrucciArtist.getGenreString(), petrucci.genre)
+    equal(petrucciArtist.getDateCreatedString(), petrucci.date_created)
+    equal(petrucciArtist.getId(), petrucci._id)
+    //toObject
+    deepEqual(petrucciArtist.toObject(), petrucci)
+    //toJSON
+    equal(typeof petrucciArtist.toJSON(), 'string')
+
+
+    //defaults
+    var glover = {
+      'name': 'Roger Glover',
+      '_id': '2',
+    }
+    var gloverArtist = new Artist(glover._id, glover.name)
+    //values
+    equal(gloverArtist.name, glover.name)
+    equal(gloverArtist.artwork, '')
+    equal(gloverArtist.getGenreString(), 'rock')
+    equal(typeof gloverArtist.getDateCreatedString(), 'string')
+    equal(gloverArtist.getId(), glover._id)
+
+    //errors
+    assert.throws(function() {new Artist(undefined, 'Andrea', 'rock', '', 1)}, /100/)
+    assert.throws(function() {new Artist([], 'Andrea', 'rock', '', 1)}, /101/)
+    assert.throws(function() {new Artist('0', undefined, 'rock', '', 1)}, /100/)
+    assert.throws(function() {new Artist('0', [], 'rock', '', 1)}, /101/)
+    assert.throws(function() {new Artist('0', 'Andrea', [], '', 1)}, /101/)
+    assert.throws(function() {new Artist('0', 'Andrea', 'rock', [], 1)}, /101/)
+    assert.throws(function() {new Artist('0', 'Andrea', 'rock', '', [])}, /101/)
+  })
+
+  test( "Exercise 1.2: Prototype AbstractSoundCollection Constructor", function() {
+    //all fields
+    var date = exampleDate
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]"
+    }
+
+    var tracks = []
+
+    var testCollection = new AbstractSoundCollection(test._id, test.name, tracks, test.date_created)
+
+    //prototype
+    notEqual(AbstractSoundCollection, undefined)
+    notEqual(AbstractSoundCollection.prototype.toObject, undefined)
+    notEqual(AbstractSoundCollection.prototype.toJSON, undefined)
+    notEqual(AbstractSoundCollection.prototype.sortTracksFunction, undefined)
+
+    var artist = new Artist('11', 'John Petrucci', 'Metal', 'www', date)
+    var dummyTrack1 = new Track('1', 'Alive', artist, 255, 'local')
+    var dummyTrack2 = new Track('2', 'Everlong', artist, 255, 'local')
+
+    //check sortTracksFunction
+    equal(AbstractSoundCollection.prototype.sortTracksFunction(dummyTrack1, dummyTrack2), -1)
+    equal(AbstractSoundCollection.prototype.sortTracksFunction(dummyTrack2, dummyTrack1), 1)
+    equal(AbstractSoundCollection.prototype.sortTracksFunction(dummyTrack1, dummyTrack1), 0)
+    assert.throws(function() {AbstractSoundCollection.prototype.sortTracksFunction('dummy',dummyTrack1)}, /102/)
+    assert.throws(function() {AbstractSoundCollection.prototype.sortTracksFunction(dummyTrack1,'dummy')}, /102/)
+
+    // object prototype
+    equal(AbstractSoundCollection.prototype.isPrototypeOf(testCollection), true)
+
+    //public variables
+    equal(testCollection.name, test.name)
+
+    //private variables
+    equal(testCollection._id, undefined)
+    equal(testCollection._date_created, undefined)
+    equal(testCollection._tracks, undefined)
+
+    //public methods
+    notEqual(testCollection.toJSON, undefined)
+    notEqual(testCollection.toObject, undefined)
+    notEqual(testCollection.getDateCreatedString, undefined)
+    notEqual(testCollection.getTracksString, undefined)
+    notEqual(testCollection.getId, undefined)
+    notEqual(testCollection.tracksCount, undefined)
+    notEqual(testCollection.addTrack, undefined)
+    notEqual(testCollection.removeTrack, undefined)
+    notEqual(testCollection.sortTracks, undefined)
+
+    // methods invokation results
+    equal(testCollection.getDateCreatedString(), test.date_created)
+    equal(testCollection.getTracksString(), test.tracks)
+    equal(testCollection.getId(), test._id)
+    
+    //function tracksCount and addTrack
+    equal(testCollection.tracksCount(), 0)
+    equal(testCollection.addTrack(dummyTrack1), undefined)
+    equal(dummyTrack1.getCollectionsString(), "[\"1\"]" )
+    equal(testCollection.addTrack(dummyTrack2), undefined)
+    equal(dummyTrack2.getCollectionsString(), "[\"1\"]" )
+    equal(testCollection.tracksCount(), 2)
+    assert.throws(function() {testCollection.addTrack(dummyTrack1)}, /103/)
+    assert.throws(function() {testCollection.addTrack('dummy')}, /102/)
+    
+    //function tracksCount and removeTrack
+    equal(testCollection.removeTrack(dummyTrack1), undefined)
+    equal(dummyTrack1.getCollectionsString(), "[]" )
+    equal(testCollection.removeTrack(dummyTrack2), undefined)
+    equal(dummyTrack2.getCollectionsString(), "[]" )
+    equal(testCollection.tracksCount(), 0)
+    assert.throws(function() {testCollection.removeTrack('dummy')}, /102/)
+
+    //check if array tracks is sorted correctly
+    equal(testCollection.addTrack(dummyTrack2), undefined)
+    equal(testCollection.getTracksString(), "[\"2\"]")
+    equal(testCollection.addTrack(dummyTrack1), undefined)
+    equal(testCollection.getTracksString(), "[\"1\",\"2\"]")
+    equal(testCollection.removeTrack(dummyTrack1), undefined)
+    equal(testCollection.removeTrack(dummyTrack2), undefined)
+
+    // toObject
+    deepEqual(testCollection.toObject(), test)
+    //toJSON
+    equal(typeof testCollection.toJSON(), 'string')
+
+    //defaults
+    var defaultTest = {
+      "_id": '1',
+      'name': 'testName'
+    }
+    var defaultTestCollection = new AbstractSoundCollection(defaultTest._id, defaultTest.name)
+    equal(defaultTestCollection.name, defaultTest.name)
+    equal(defaultTestCollection.getId(), defaultTest._id)
+    equal(typeof defaultTestCollection.getDateCreatedString(), 'string')
+    equal(defaultTestCollection.getTracksString(), '[]')
+
+    //errors
+    assert.throws(function() {new AbstractSoundCollection(undefined, 'test', [], date)}, /100/)
+    assert.throws(function() {new AbstractSoundCollection([], 'test', [], date)}, /101/)
+    assert.throws(function() {new AbstractSoundCollection('1', undefined, [], date)}, /100/)
+    assert.throws(function() {new AbstractSoundCollection('1', [], [], date)}, /101/)
+    assert.throws(function() {new AbstractSoundCollection('1', 'test', 'dummy', date)}, /101/)
+    assert.throws(function() {new AbstractSoundCollection('1', 'test', [], [])}, /101/)
+  })
+  
+  test( "Exercise 1.2: Prototype Playlist Constructor", function() {
+    //all fields
+    var date = exampleDate
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]",
+      "owner": "1"
+    }
+
+    var user = new User('1', 'Andrea', 'andrea@lol.com', 'ok')
+    var tracks = []
+
+    var testPlaylist = new Playlist(test._id, test.name, tracks, test.date_created, user)
+
+    //prototype
+    notEqual(Playlist, undefined)
+    notEqual(Playlist.prototype.toObject, undefined)
+    notEqual(Playlist.prototype.toJSON, undefined)
+
+    var artist = new Artist('11', 'John Petrucci', 'Metal', 'www', exampleDate)
+    var dummyTrack1 = new Track('1', 'Alive', artist, 255, 'local')
+    var dummyTrack2 = new Track('2', 'Everlong', artist, 255, 'local')
+
+    //check sortTracksFunction
+    equal(Playlist.prototype.sortTracksFunction(dummyTrack1, dummyTrack2), -1)
+    equal(Playlist.prototype.sortTracksFunction(dummyTrack2, dummyTrack1), 1)
+    equal(Playlist.prototype.sortTracksFunction(dummyTrack1, dummyTrack1), 0)
+    assert.throws(function() {Playlist.prototype.sortTracksFunction('dummy',dummyTrack1)}, /102/)
+    assert.throws(function() {Playlist.prototype.sortTracksFunction(dummyTrack1,'dummy')}, /102/)
+
+    // object prototype
+    equal(AbstractSoundCollection.prototype.isPrototypeOf(testPlaylist), true)
+    equal(Playlist.prototype.isPrototypeOf(testPlaylist), true)
+
+    //public variables
+    equal(testPlaylist.name, test.name)
+
+    //private variables
+    equal(testPlaylist._id, undefined)
+    equal(testPlaylist._date_created, undefined)
+    equal(testPlaylist._tracks, undefined)
+    equal(testPlaylist._owner, undefined)
+
+    //public methods
+    notEqual(testPlaylist.toJSON, undefined)
+    notEqual(testPlaylist.toObject, undefined)
+    notEqual(testPlaylist.getDateCreatedString, undefined)
+    notEqual(testPlaylist.getTracksString, undefined)
+    notEqual(testPlaylist.getId, undefined)
+    notEqual(testPlaylist.tracksCount, undefined)
+    notEqual(testPlaylist.addTrack, undefined)
+    notEqual(testPlaylist.removeTrack, undefined)
+    notEqual(testPlaylist.sortTracks, undefined)
+    notEqual(testPlaylist.getOwnerString, undefined)
+
+    // methods invokation results
+    equal(testPlaylist.getDateCreatedString(), test.date_created)
+    equal(testPlaylist.getTracksString(), test.tracks)
+    equal(testPlaylist.getId(), test._id)
+    equal(testPlaylist.getOwnerString(), test.owner)
+    
+    //function tracksCount and addTrack
+    equal(testPlaylist.tracksCount(), 0)
+    equal(testPlaylist.addTrack(dummyTrack1), undefined)
+    equal(testPlaylist.addTrack(dummyTrack2), undefined)
+    equal(testPlaylist.tracksCount(), 2)
+    assert.throws(function() {testPlaylist.addTrack(dummyTrack1)}, /103/)
+    assert.throws(function() {testPlaylist.addTrack('dummy')}, /102/)
+    
+    //function tracksCount and removeTrack
+    equal(testPlaylist.removeTrack(dummyTrack1), undefined)
+    equal(testPlaylist.removeTrack(dummyTrack2), undefined)
+    equal(testPlaylist.tracksCount(), 0)
+    assert.throws(function() {testPlaylist.removeTrack('dummy')}, /102/)
+
+    //check if array tracks is sorted correctly
+    equal(testPlaylist.addTrack(dummyTrack2), undefined)
+    equal(testPlaylist.getTracksString(), "[\"2\"]")
+    equal(testPlaylist.addTrack(dummyTrack1), undefined)
+    equal(testPlaylist.getTracksString(), "[\"1\",\"2\"]")
+    equal(testPlaylist.removeTrack(dummyTrack1), undefined)
+    equal(testPlaylist.removeTrack(dummyTrack2), undefined)
+
+    // toObject
+    deepEqual(testPlaylist.toObject(), test)
+    //toJSON
+    equal(typeof testPlaylist.toJSON(), 'string')
+
+    //defaults
+    var defaultTest = {
+      "_id": '1',
+      'name': 'testName',
+      'owner': user
+    }
+    var defaultTestPlaylist = new Playlist(defaultTest._id, defaultTest.name, undefined, undefined, user)
+    equal(defaultTestPlaylist.name, defaultTest.name)
+    equal(defaultTestPlaylist.getId(), defaultTest._id)
+    equal(typeof defaultTestPlaylist.getDateCreatedString(), 'string')
+    equal(defaultTestPlaylist.getTracksString(), '[]')
+    equal(defaultTestPlaylist.getOwnerString(), user.getId())
+
+    //errors
+    assert.throws(function() {new Playlist(undefined, 'test', [], date, user)}, /100/)
+    assert.throws(function() {new Playlist([], 'test', [], date, user)}, /101/)
+    assert.throws(function() {new Playlist('1', undefined, [], date, user)}, /100/)
+    assert.throws(function() {new Playlist('1', [], [], date, user)}, /101/)
+    assert.throws(function() {new Playlist('1', 'test', 'dummy', date, user)}, /101/)
+    assert.throws(function() {new Playlist('1', 'test', [], [], user)}, /101/)
+    assert.throws(function() {new Playlist('1', 'test', [], [], undefined)}, /101/)
+    assert.throws(function() {new Playlist('1', 'test', [], [], [])}, /101/)
+  })
+
+  test( "Exercise 1.2: Prototype Album Constructor", function() {
+    //all fields
+    var date = exampleDate
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]",
+      "artwork": 'www',
+      'label': 'Nice',
+      'artist': '1',
+      "release_date": date
+    }
+
+    var tracks = []
+    var artist = new Artist('1', 'John Petrucci', 'Metal', 'www', date)
+
+    var testAlbum = new Album(test._id, test.name, tracks, test.date_created, artist, test.artwork, test.release_date, test.label)
+
+    //prototype
+    notEqual(Album, undefined)
+    notEqual(Album.prototype.toObject, undefined)
+    notEqual(Album.prototype.toJSON, undefined)
+    notEqual(Album.prototype.sortTracksFunction, undefined)
+
+    var artist = new Artist('11', 'John Petrucci', 'Metal', 'www', exampleDate)
+    var dummyTrack1 = new Track('1', 'Alive', artist, 255, 'local')
+    var dummyTrack2 = new Track('2', 'Everlong', artist, 255, 'local')
+
+    //check sortTracksFunction
+    equal(Album.prototype.sortTracksFunction(dummyTrack1, dummyTrack2), -1)
+    equal(Album.prototype.sortTracksFunction(dummyTrack2, dummyTrack1), 1)
+    equal(Album.prototype.sortTracksFunction(dummyTrack1, dummyTrack1), 0)
+    assert.throws(function() {Album.prototype.sortTracksFunction('dummy',dummyTrack1)}, /102/)
+    assert.throws(function() {Album.prototype.sortTracksFunction(dummyTrack1,'dummy')}, /102/)
+
+    // object prototype
+    equal(AbstractSoundCollection.prototype.isPrototypeOf(testAlbum), true)
+    equal(Album.prototype.isPrototypeOf(testAlbum), true)
+
+    //public variables
+    equal(testAlbum.name, test.name)
+    equal(testAlbum.artwork, test.artwork)
+    equal(testAlbum.label, test.label)
+
+    //private variables
+    equal(testAlbum._id, undefined)
+    equal(testAlbum._date_created, undefined)
+    equal(testAlbum._tracks, undefined)
+    equal(testAlbum._artist, undefined)
+    equal(testAlbum._release_date, undefined)
+
+    //public methods
+    notEqual(testAlbum.toJSON, undefined)
+    notEqual(testAlbum.toObject, undefined)
+    notEqual(testAlbum.getDateCreatedString, undefined)
+    notEqual(testAlbum.getTracksString, undefined)
+    notEqual(testAlbum.getId, undefined)
+    notEqual(testAlbum.tracksCount, undefined)
+    notEqual(testAlbum.addTrack, undefined)
+    notEqual(testAlbum.removeTrack, undefined)
+    notEqual(testAlbum.sortTracks, undefined)
+    notEqual(testAlbum.getArtistString, undefined)
+    notEqual(testAlbum.getDateReleaseString, undefined)
+
+    // methods invokation results
+    equal(testAlbum.getDateCreatedString(), test.date_created)
+    equal(testAlbum.getTracksString(), test.tracks)
+    equal(testAlbum.getId(), test._id)
+    equal(testAlbum.getArtistString(), test.artist)
+    equal(testAlbum.getDateReleaseString(), test.release_date)
+
+    //function tracksCount and addTrack
+    equal(testAlbum.tracksCount(), 0)
+    equal(testAlbum.addTrack(dummyTrack1), undefined)
+    equal(testAlbum.addTrack(dummyTrack2), undefined)
+    equal(testAlbum.tracksCount(), 2)
+    assert.throws(function() {testAlbum.addTrack(dummyTrack1)}, /103/)
+    assert.throws(function() {testAlbum.addTrack('dummy')}, /102/)
+    
+    //function tracksCount and removeTrack
+    equal(testAlbum.removeTrack(dummyTrack1), undefined)
+    equal(testAlbum.removeTrack(dummyTrack2), undefined)
+    equal(testAlbum.tracksCount(), 0)
+    assert.throws(function() {testAlbum.removeTrack('dummy')}, /102/)
+
+    //check if array tracks is sorted correctly
+    equal(testAlbum.addTrack(dummyTrack2), undefined)
+    equal(testAlbum.getTracksString(), "[\"2\"]")
+    equal(testAlbum.addTrack(dummyTrack1), undefined)
+    equal(testAlbum.getTracksString(), "[\"1\",\"2\"]")
+    equal(testAlbum.removeTrack(dummyTrack1), undefined)
+    equal(testAlbum.removeTrack(dummyTrack2), undefined)
+
+    // // toObject
+    deepEqual(testAlbum.toObject(), test)
+    // //toJSON
+    equal(typeof testAlbum.toJSON(), 'string')
+
+    //defaults
+    var defaultTest = {
+      "_id": '1',
+      'name': 'testName',
+      "artwork": 'www'
+    }
+    var defaultTestAlbum = new Album(defaultTest._id, defaultTest.name, undefined, undefined, artist, defaultTest.artwork)
+    equal(defaultTestAlbum.name, defaultTest.name)
+    equal(defaultTestAlbum.getId(), defaultTest._id)
+    equal(typeof defaultTestAlbum.getDateCreatedString(), 'string')
+    equal(defaultTestAlbum.getTracksString(), '[]')
+    equal(defaultTestAlbum.getArtistString(), artist.getId())
+    equal(defaultTestAlbum.artwork, defaultTest.artwork)
+    equal(defaultTestAlbum.label, 'USI-INF records')
+    equal(typeof defaultTestAlbum.getDateCreatedString(), 'string')
+    
+    // //errors
+    assert.throws(function() {new Album(undefined, 'test', [], date, artist, 'www', date, 'label')}, /100/)
+    assert.throws(function() {new Album([], 'test', [], date, artist, 'www', date, 'label')}, /101/)
+    assert.throws(function() {new Album('1', undefined, [], date, artist, 'www', date, 'label')}, /100/)
+    assert.throws(function() {new Album('1', [], [], date, artist, 'www', date, 'label')}, /101/)
+    assert.throws(function() {new Album('1', 'test', 'dummy', date, artist, 'www', date, 'label')}, /101/)
+    assert.throws(function() {new Album('1', 'test', [], [], artist, 'www', date, 'label')}, /101/)
+    assert.throws(function() {new Album('1', 'test', [], date, undefined, 'www', date, 'label')}, /100/)
+    assert.throws(function() {new Album('1', 'test', [], date, [], 'www', date, 'label')}, /101/)
+    assert.throws(function() {new Album('1', 'test', [], date, artist, undefined, date, 'label')}, /100/)
+    assert.throws(function() {new Album('1', 'test', [], date, artist, [], date, 'label')}, /101/)
+    assert.throws(function() {new Album('1', 'test', [], date, artist, 'www', [], 'label')}, /101/)
+    assert.throws(function() {new Album('1', 'test', [], date, artist, 'www', date, [])}, /101/)
+  })
+
+  test( "Exercise 1.3: Prototype Track Constructor", function(){
+    //all fields
+    var date = exampleDate
+    var rosenrot = {
+      'name': 'Rosenrot',
+      '_id': '10',
+      'duration': '3:55',
+      'artist': '11',
+      'collections': '[]',
+      'file': 'local',
+      'id3Tags': '[\"ambient\",\"nice\"]',
+      'release_date': date,
+      'date_created': date
+    }
+    var duration = 235
+    var artist = new Artist('11', 'John Petrucci', 'Metal', 'www', date)
+    var collection = []
+    var id3Tags = ['ambient', 'nice']
+
+    var rosenrotTrack = new Track(rosenrot._id, rosenrot.name, artist, duration, rosenrot.file, collection, id3Tags, rosenrot.release_date, rosenrot.date_created)
+
+    //prototype
+    notEqual(Track, undefined)
+    notEqual(Track.prototype.toObject, undefined)
+    notEqual(Track.prototype.toJSON, undefined)
+    notEqual(Track.prototype.sortTagsFunction, undefined)
+    notEqual(Track.prototype.getDurationString, undefined)
+
+    //check sortTagsFunction
+    equal(Track.prototype.sortTagsFunction('a', 'b'), -1)
+    equal(Track.prototype.sortTagsFunction('b', 'a'), 1)
+    equal(Track.prototype.sortTagsFunction('a', 'a'), 0)
+    assert.throws(function() {Track.prototype.sortTagsFunction([],'a')}, /102/)
+    assert.throws(function() {Track.prototype.sortTagsFunction('a',[])}, /102/)
+
+    //object prototype
+    equal(Track.prototype.isPrototypeOf(rosenrotTrack), true)
+
+    //public variables
+    equal(rosenrotTrack.name, rosenrot.name)
+    equal(rosenrotTrack.getDurationString(), rosenrot.duration)
+
+    //private variables
+    equal(rosenrotTrack._id, undefined)
+    equal(rosenrotTrack._artist, undefined)
+    equal(rosenrotTrack._collections, undefined)
+    equal(rosenrotTrack._file, undefined)
+    equal(rosenrotTrack._id3Tags, undefined)
+    equal(rosenrotTrack._release_date, undefined)
+    equal(rosenrotTrack._date_created, undefined)
+
+    //public methods
+    notEqual(rosenrotTrack.toJSON, undefined)
+    notEqual(rosenrotTrack.toObject, undefined)
+    notEqual(rosenrotTrack.getDurationString, undefined)
+    notEqual(rosenrotTrack.getArtistString, undefined)
+    notEqual(rosenrotTrack.getId3TagsString, undefined)
+    notEqual(rosenrotTrack.getCollectionsString, undefined)
+    notEqual(rosenrotTrack.getDateCreatedString, undefined)
+    notEqual(rosenrotTrack.getDateReleaseString, undefined)
+    notEqual(rosenrotTrack.getId, undefined)
+    notEqual(rosenrotTrack.getFile, undefined)
+    notEqual(rosenrotTrack.id3TagsCount, undefined)
+    notEqual(rosenrotTrack.addTag, undefined)
+    notEqual(rosenrotTrack.removeTag, undefined)
+    notEqual(rosenrotTrack.addCollection, undefined)
+    notEqual(rosenrotTrack.removeCollection, undefined)
+    notEqual(rosenrotTrack.sortTags, undefined)
+
+    // methods invokation results
+    equal(rosenrotTrack.getDurationString(), rosenrot.duration)
+    equal(rosenrotTrack.getArtistString(), rosenrot.artist)
+    equal(rosenrotTrack.getId3TagsString(), rosenrot.id3Tags)
+    equal(rosenrotTrack.getCollectionsString(), rosenrot.collections)
+    equal(rosenrotTrack.getDateCreatedString(), rosenrot.date_created)
+    equal(rosenrotTrack.getDateReleaseString(), rosenrot.release_date)
+    equal(rosenrotTrack.getId(), rosenrot._id)
+    equal(rosenrotTrack.getFile(), rosenrot.file)    
+    
+    //function id3TagsCount and addTag
+    equal(rosenrotTrack.id3TagsCount(), 2)
+    equal(rosenrotTrack.addTag('primo'), undefined)
+    equal(rosenrotTrack.id3TagsCount(), 3)
+    assert.throws(function() {rosenrotTrack.addTag('primo')}, /103/)
+    assert.throws(function() {rosenrotTrack.addTag([])}, /102/)
+    
+    //function id3TagsCount and removeTag
+    equal(rosenrotTrack.removeTag('primo'), undefined)
+    equal(rosenrotTrack.id3TagsCount(), 2)
+    assert.throws(function() {rosenrotTrack.removeTag([])}, /102/)
+
+    //check if array id3Tags is sorted correctly
+    equal(rosenrotTrack.addTag('b'), undefined)
+    equal(rosenrotTrack.addTag('a'), undefined)
+    equal(rosenrotTrack.getId3TagsString(), "[\"a\",\"ambient\",\"b\",\"nice\"]")
+    equal(rosenrotTrack.removeTag('b'), undefined)
+    equal(rosenrotTrack.removeTag('a'), undefined)
+
+    var tracks = []
+    var dummyArtist = new Artist('1', 'John Petrucci', 'Metal', 'www', date)
+
+    var dummyAlbum1 = new Album('2', 'test', tracks, date, dummyArtist, 'www', date, 'label')
+    var dummyAlbum2 = new Album('3', 'test', tracks, date, dummyArtist, 'www', date, 'label')
+
+    //function addCollection
+    equal(rosenrotTrack.addCollection(dummyAlbum1), undefined)
+    equal(rosenrotTrack.getCollectionsString(), "[\"2\"]")
+    equal(rosenrotTrack.addCollection(dummyAlbum2), undefined)
+    equal(rosenrotTrack.getCollectionsString(), "[\"2\",\"3\"]")
+    assert.throws(function() {rosenrotTrack.addCollection(dummyAlbum1)}, /103/)
+    assert.throws(function() {rosenrotTrack.addCollection([])}, /102/)
+    
+    // function removeCollection
+    equal(rosenrotTrack.removeCollection(dummyAlbum2), undefined)
+    equal(rosenrotTrack.getCollectionsString(), "[\"2\"]")
+    equal(rosenrotTrack.removeCollection(dummyAlbum1), undefined)
+    equal(rosenrotTrack.getCollectionsString(), "[]")
+    assert.throws(function() {rosenrotTrack.removeCollection([])}, /102/)
+
+    // toObject
+    deepEqual(rosenrotTrack.toObject(), rosenrot)
+    //toJSON
+    equal(typeof rosenrotTrack.toJSON(), 'string')
+
+    //defaults
+    var everlong = {
+      'name': 'Everlong',
+      '_id': '11',
+      'duration': '4:11',
+      'artist': '11',
+      'file': 'local'
+    }
+    duration = 251
+    var dummyArtist = new Artist('11', 'John Petrucci', 'Metal', 'www', exampleDate)
+    var everlongTrack = new Track(everlong._id, everlong.name, dummyArtist, duration, everlong.file)
+
+    equal(everlongTrack.getCollectionsString(), '[]')
+    equal(everlongTrack.getId3TagsString(), '[]')
+    equal(typeof everlongTrack.getDateCreatedString(), 'string')
+    equal(typeof everlongTrack.getDateReleaseString(), 'string')
+
+    //errors
+    assert.throws(function() {new Track(undefined, 'everlong', artist, 251, 'local', [], [], date, date)}, /100/)
+    assert.throws(function() {new Track([], 'everlong', artist, 251, 'local', [], [], date, date)}, /101/)
+    assert.throws(function() {new Track('1', undefined, artist, 251, 'local', [], [], date, date)}, /100/)
+    assert.throws(function() {new Track('1', [], artist, 251, 'local', [], [], date, date)}, /101/)
+    assert.throws(function() {new Track('1', 'everlong', undefined, 251, 'local', [], [], date, date)}, /100/)
+    assert.throws(function() {new Track('1', 'everlong', [], 251, 'local', [], [], date, date)}, /101/)
+    assert.throws(function() {new Track('1', 'everlong', artist, undefined, 'local', [], [], date, date)}, /100/)
+    assert.throws(function() {new Track('1', 'everlong', artist, [], 'local', [], [], date, date)}, /101/)
+    assert.throws(function() {new Track('1', 'everlong', artist, 251, undefined, [], [], date, date)}, /100/)
+    assert.throws(function() {new Track('1', 'everlong', artist, 251, [], [], [], date, date)}, /101/)
+    assert.throws(function() {new Track('1', 'everlong', artist, 251, 'local', 'dummy', [], date, date)}, /101/)
+    assert.throws(function() {new Track('1', 'everlong', artist, 251, 'local', [], 'dummy', date, date)}, /101/)
+    assert.throws(function() {new Track('1', 'everlong', artist, 251, 'local', [], [], [], date)}, /101/)
+    assert.throws(function() {new Track('1', 'everlong', artist, 251, 'local', [], [], date, [])}, /101/)
+  })
+
+  test( "Exercise 1.4: Prototype User Constructor", function() {
+    //all fields
+    var date = '' + date
+    var test = {
+      'firstName': 'Jenny',
+      'lastName': 'De Cesarei',
+      'email': 'jenny@asd.com',
+      '_id': '1',
+      'userName': 'girl88',
+      'password': 'hi',
+      'date_created': date,
+      'playlists': '[]' 
+    }
+
+    var playlists = []
+
+    var testUser = new User(test._id, test.userName, test.email, test.password, test.firstName, test.lastName, date, playlists)
+    
+    //prototype
+    notEqual(User, undefined)
+    notEqual(User.prototype.toObject, undefined)
+    notEqual(User.prototype.toJSON, undefined)
+    notEqual(User.prototype.sortPlaylistFunction, undefined)
+    notEqual(User.prototype.getFullName, undefined)
+
+    var dummyPlaylist1 = new Playlist('1', 'A', undefined, undefined, testUser)
+    var dummyPlaylist2 = new Playlist('2', 'E', undefined, undefined, testUser)
+
+    //check sortTagsFunction
+    equal(User.prototype.sortPlaylistFunction(dummyPlaylist1, dummyPlaylist2), -1)
+    equal(User.prototype.sortPlaylistFunction(dummyPlaylist2, dummyPlaylist1), 1)
+    equal(User.prototype.sortPlaylistFunction(dummyPlaylist1, dummyPlaylist1), 0)
+    assert.throws(function() {User.prototype.sortPlaylistFunction([],dummyPlaylist1)}, /102/)
+    assert.throws(function() {User.prototype.sortPlaylistFunction(dummyPlaylist1,[])}, /102/)
+
+    //object prototype
+    equal(User.prototype.isPrototypeOf(testUser), true)
+
+    //public variables
+    equal(testUser.firstName, testUser.firstName)
+    equal(testUser.lastName, testUser.lastName)
+    equal(testUser.email, testUser.email)
+
+    //private variables
+    equal(testUser._id, undefined)
+    equal(testUser._userName, undefined)
+    equal(testUser._password, undefined)
+    equal(testUser._file, undefined)
+    equal(testUser._playlists, undefined)
+    equal(testUser._date_created, undefined)
+
+    //public methods
+    notEqual(testUser.toJSON, undefined)
+    notEqual(testUser.toObject, undefined)
+    notEqual(testUser.getPlaylistsString, undefined)
+    notEqual(testUser.getDateCreatedString, undefined)
+    notEqual(testUser.getFullName, undefined)
+    notEqual(testUser.getId, undefined)
+    notEqual(testUser.getUserName, undefined)
+    notEqual(testUser.getPassword, undefined)
+    notEqual(testUser.playlistsCount, undefined)
+    notEqual(testUser.addPlaylist, undefined)
+    notEqual(testUser.removePlaylist, undefined)
+    notEqual(testUser.sortPlaylist, undefined)
+
+    // methods invokation results
+    equal(testUser.getPlaylistsString(), test.playlists)
+    equal(testUser.getDateCreatedString(), test.date_created)
+    equal(testUser.getFullName(), test.firstName + " " + test.lastName)
+    equal(testUser.getId(), test._id)
+    equal(testUser.getUserName(), test.userName)
+    equal(testUser.getPassword(), test.password)
+    equal(testUser.playlistsCount(), 0)
+    
+    //function playlistsCount and addPlaylist
+    equal(testUser.playlistsCount(), 0)
+    equal(testUser.addPlaylist(dummyPlaylist1), undefined)
+    equal(testUser.playlistsCount(), 1)
+    equal(testUser.addPlaylist(dummyPlaylist2), undefined)
+    equal(testUser.playlistsCount(), 2)
+    assert.throws(function() {testUser.addPlaylist(dummyPlaylist1)}, /103/)
+    assert.throws(function() {testUser.addPlaylist([])}, /102/)
+    
+    //function playlistsCount and removePlaylist
+    equal(testUser.removePlaylist(dummyPlaylist2), undefined)
+    equal(testUser.playlistsCount(), 1)
+    equal(testUser.removePlaylist(dummyPlaylist1), undefined)
+    equal(testUser.playlistsCount(), 0)
+    assert.throws(function() {testUser.removePlaylist([])}, /102/)
+
+    //check if array playlists is sorted correctly
+    equal(testUser.addPlaylist(dummyPlaylist2), undefined)
+    equal(testUser.getPlaylistsString(), "[\"2\"]")
+    equal(testUser.addPlaylist(dummyPlaylist1), undefined)
+    equal(testUser.getPlaylistsString(), "[\"1\",\"2\"]")
+    equal(testUser.removePlaylist(dummyPlaylist2), undefined)
+    equal(testUser.removePlaylist(dummyPlaylist1), undefined)
+
+    // toObject
+    deepEqual(testUser.toObject(), test)
+    //toJSON
+    equal(typeof testUser.toJSON(), 'string')
+
+    //defaults
+    var defaultTest = {
+      'email': 'jenny@asd.com',
+      '_id': '1',
+      'userName': 'girl88',
+      'password': 'hi'
+    }
+    var defaultTestUser = new User(test._id, test.userName, test.email, test.password)
+    
+    equal(defaultTestUser.firstName, defaultTest.userName)
+    equal(defaultTestUser.lastName, defaultTest.userName)
+    equal(defaultTestUser.email, defaultTest.email)
+    equal(defaultTestUser.getId(), defaultTest._id)
+    equal(defaultTestUser.getUserName(), defaultTest.userName)
+    equal(defaultTestUser.getPassword(), defaultTest.password)
+    equal(typeof defaultTestUser.getDateCreatedString(), 'string')
+    equal(defaultTestUser.getPlaylistsString(), '[]')
+
+    //errors
+    assert.throws(function() {new User(undefined, 'Ergo', 'a@foo.com', 'pim', 'Andrea', 'Galli', date, [])}, /100/)
+    assert.throws(function() {new User([], 'Ergo', 'a@foo.com', 'pim', 'Andrea', 'Galli', date, [])}, /101/)
+    assert.throws(function() {new User('1', undefined, 'a@foo.com', 'pim', 'Andrea', 'Galli', date, [])}, /100/)
+    assert.throws(function() {new User('1', [], 'a@foo.com', 'pim', 'Andrea', 'Galli', date, [])}, /101/)
+    assert.throws(function() {new User('1', 'Ergo', undefined, 'pim', 'Andrea', 'Galli', date, [])}, /100/)
+    assert.throws(function() {new User('1', 'Ergo', [], 'pim', 'Andrea', 'Galli', date, [])}, /101/)
+    assert.throws(function() {new User('1', 'Ergo', 'a@foo.com', undefined, 'Andrea', 'Galli', date, [])}, /100/)
+    assert.throws(function() {new User('1', 'Ergo', 'a@foo.com', [], 'Andrea', 'Galli', date, [])}, /101/)
+    assert.throws(function() {new User('1', 'Ergo', 'a@foo.com', 'pim', [], 'Galli', date, [])}, /101/)
+    assert.throws(function() {new User('1', 'Ergo', 'a@foo.com', 'pim', 'Andrea', [], date, [])}, /101/)
+    assert.throws(function() {new User('1', 'Ergo', 'a@foo.com', 'pim', 'Andrea', 'Galli', [], [])}, /101/)
+    assert.throws(function() {new User('1', 'Ergo', 'a@foo.com', 'pim', 'Andrea', 'Galli', date, 'dummy')}, /101/)
+  })
+
+  test( "Exercise 2.1: Literal artist Constructor", function(){
+    //all fields
+    var date = exampleDate
+    var petrucci = {
+      'name': 'John Petrucci',
+      'artwork': 'www',
+      'genre': 'metal',
+      '_id': '1',
+      'date_created': date
+    }
+
+    var petrucciArtist = artist(petrucci._id, petrucci.name, petrucci.genre, petrucci.artwork, petrucci.date_created)
+    
+    //prototype
+    notEqual(artist, undefined)
+
+    //public variables
+    equal(petrucciArtist.name, petrucci.name)
+    equal(petrucciArtist.artwork, petrucci.artwork)
+    
+    //private variables
+    equal(petrucciArtist._genre, undefined)
+    equal(petrucciArtist._id, undefined)
+    equal(petrucciArtist._date_created, undefined)
+
+    //public methods
+    notEqual(petrucciArtist.toJSON, undefined)
+    notEqual(petrucciArtist.toObject, undefined)
+    notEqual(petrucciArtist.getGenreString, undefined)
+    notEqual(petrucciArtist.getDateCreatedString, undefined)
+    notEqual(petrucciArtist.getId, undefined)
+
+    //methods invokation results
+    equal(petrucciArtist.getGenreString(), petrucci.genre)
+    equal(petrucciArtist.getDateCreatedString(), petrucci.date_created)
+    equal(petrucciArtist.getId(), petrucci._id)
+    //toObject
+    deepEqual(petrucciArtist.toObject(), petrucci)
+    //toJSON
+    equal(typeof petrucciArtist.toJSON(), 'string')
+
+
+    //defaults
+    var glover = {
+      'name': 'Roger Glover',
+      '_id': '2',
+    }
+    var gloverArtist = artist(glover._id, glover.name)
+    //values
+    equal(gloverArtist.name, glover.name)
+    equal(gloverArtist.artwork, '')
+    equal(gloverArtist.getGenreString(), 'rock')
+    equal(typeof gloverArtist.getDateCreatedString(), 'string')
+    equal(gloverArtist.getId(), glover._id)
+
+    //errors
+    assert.throws(function() {artist(undefined, 'Andrea', 'rock', '', 1)}, /100/)
+    assert.throws(function() {artist([], 'Andrea', 'rock', '', 1)}, /101/)
+    assert.throws(function() {artist('0', undefined, 'rock', '', 1)}, /100/)
+    assert.throws(function() {artist('0', [], 'rock', '', 1)}, /101/)
+    assert.throws(function() {artist('0', 'Andrea', [], '', 1)}, /101/)
+    assert.throws(function() {artist('0', 'Andrea', 'rock', [], 1)}, /101/)
+    assert.throws(function() {artist('0', 'Andrea', 'rock', '', [])}, /101/)
+  })
+
+  test( "Exercise 2.2: Literal abstractSoundCollection Constructor", function() {
+    //all fields
+    var date = exampleDate
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]"
+    }
+
+    var tracks = []
+
+    var testCollection = abstractSoundCollection(test._id, test.name, tracks, test.date_created)
+
+    //prototype
+    notEqual(abstractSoundCollection, undefined)
+
+    var dummyArtist = artist('11', 'John Petrucci', 'Metal', 'www', date)
+    var dummyTrack1 = track('1', 'Alive', dummyArtist, 255, 'local')
+    var dummyTrack2 = track('2', 'Everlong', dummyArtist, 255, 'local')
+
+    //check sortTracksFunction
+    equal(testCollection.sortTracksFunction(dummyTrack1, dummyTrack2), -1)
+    equal(testCollection.sortTracksFunction(dummyTrack2, dummyTrack1), 1)
+    equal(testCollection.sortTracksFunction(dummyTrack1, dummyTrack1), 0)
+    assert.throws(function() {testCollection.sortTracksFunction('dummy',dummyTrack1)}, /102/)
+    assert.throws(function() {testCollection.sortTracksFunction(dummyTrack1,'dummy')}, /102/)
+
+    //public variables
+    equal(testCollection.name, test.name)
+
+    //private variables
+    equal(testCollection._id, undefined)
+    equal(testCollection._date_created, undefined)
+    equal(testCollection._tracks, undefined)
+
+    //public methods
+    notEqual(testCollection.toJSON, undefined)
+    notEqual(testCollection.toObject, undefined)
+    notEqual(testCollection.getDateCreatedString, undefined)
+    notEqual(testCollection.getTracksString, undefined)
+    notEqual(testCollection.getId, undefined)
+    notEqual(testCollection.tracksCount, undefined)
+    notEqual(testCollection.addTrack, undefined)
+    notEqual(testCollection.removeTrack, undefined)
+    notEqual(testCollection.sortTracks, undefined)
+
+    // methods invokation results
+    equal(testCollection.getDateCreatedString(), test.date_created)
+    equal(testCollection.getTracksString(), test.tracks)
+    equal(testCollection.getId(), test._id)
+    
+    //function tracksCount and addTrack
+    equal(testCollection.tracksCount(), 0)
+    equal(testCollection.addTrack(dummyTrack1), undefined)
+    equal(dummyTrack1.getCollectionsString(), "[\"1\"]" )
+    equal(testCollection.addTrack(dummyTrack2), undefined)
+    equal(dummyTrack2.getCollectionsString(), "[\"1\"]" )
+    equal(testCollection.tracksCount(), 2)
+    assert.throws(function() {testCollection.addTrack(dummyTrack1)}, /103/)
+    assert.throws(function() {testCollection.addTrack('dummy')}, /102/)
+    
+    //function tracksCount and removeTrack
+    equal(testCollection.removeTrack(dummyTrack1), undefined)
+    equal(dummyTrack1.getCollectionsString(), "[]" )
+    equal(testCollection.removeTrack(dummyTrack2), undefined)
+    equal(dummyTrack2.getCollectionsString(), "[]" )
+    equal(testCollection.tracksCount(), 0)
+    assert.throws(function() {testCollection.removeTrack('dummy')}, /102/)
+
+    //check if array tracks is sorted correctly
+    equal(testCollection.addTrack(dummyTrack2), undefined)
+    equal(testCollection.getTracksString(), "[\"2\"]")
+    equal(testCollection.addTrack(dummyTrack1), undefined)
+    equal(testCollection.getTracksString(), "[\"1\",\"2\"]")
+    equal(testCollection.removeTrack(dummyTrack1), undefined)
+    equal(testCollection.removeTrack(dummyTrack2), undefined)
+
+    // toObject
+    deepEqual(testCollection.toObject(), test)
+    //toJSON
+    equal(typeof testCollection.toJSON(), 'string')
+
+    //defaults
+    var defaultTest = {
+      "_id": '1',
+      'name': 'testName'
+    }
+    var defaultTestCollection = abstractSoundCollection(defaultTest._id, defaultTest.name)
+    equal(defaultTestCollection.name, defaultTest.name)
+    equal(defaultTestCollection.getId(), defaultTest._id)
+    equal(typeof defaultTestCollection.getDateCreatedString(), 'string')
+    equal(defaultTestCollection.getTracksString(), '[]')
+
+    //errors
+    assert.throws(function() {abstractSoundCollection(undefined, 'test', [], date)}, /100/)
+    assert.throws(function() {abstractSoundCollection([], 'test', [], date)}, /101/)
+    assert.throws(function() {abstractSoundCollection('1', undefined, [], date)}, /100/)
+    assert.throws(function() {abstractSoundCollection('1', [], [], date)}, /101/)
+    assert.throws(function() {abstractSoundCollection('1', 'test', 'dummy', date)}, /101/)
+    assert.throws(function() {abstractSoundCollection('1', 'test', [], [])}, /101/)
+  })
+
+  test( "Exercise 2.2: Literal playlist Constructor", function() {
+    //all fields
+    var date = exampleDate
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]",
+      "owner": "1"
+    }
+
+    var dummyUser = user('1', 'Andrea', 'andrea@lol.com', 'ok')
+    var tracks = []
+
+    var testPlaylist = playlist(test._id, test.name, tracks, test.date_created, dummyUser)
+
+    //prototype
+    notEqual(playlist, undefined)
+
+    var dummyArtist = artist('11', 'John Petrucci', 'Metal', 'www', exampleDate)
+    var dummyTrack1 = track('1', 'Alive', dummyArtist, 255, 'local')
+    var dummyTrack2 = track('2', 'Everlong', dummyArtist, 255, 'local')
+
+    //check sortTracksFunction
+    equal(testPlaylist.sortTracksFunction(dummyTrack1, dummyTrack2), -1)
+    equal(testPlaylist.sortTracksFunction(dummyTrack2, dummyTrack1), 1)
+    equal(testPlaylist.sortTracksFunction(dummyTrack1, dummyTrack1), 0)
+    assert.throws(function() {testPlaylist.sortTracksFunction('dummy',dummyTrack1)}, /102/)
+    assert.throws(function() {testPlaylist.sortTracksFunction(dummyTrack1,'dummy')}, /102/)
+
+    //public variables
+    equal(testPlaylist.name, test.name)
+
+    //private variables
+    equal(testPlaylist._id, undefined)
+    equal(testPlaylist._date_created, undefined)
+    equal(testPlaylist._tracks, undefined)
+    equal(testPlaylist._owner, undefined)
+
+    //public methods
+    notEqual(testPlaylist.toJSON, undefined)
+    notEqual(testPlaylist.toObject, undefined)
+    notEqual(testPlaylist.getDateCreatedString, undefined)
+    notEqual(testPlaylist.getTracksString, undefined)
+    notEqual(testPlaylist.getId, undefined)
+    notEqual(testPlaylist.tracksCount, undefined)
+    notEqual(testPlaylist.addTrack, undefined)
+    notEqual(testPlaylist.removeTrack, undefined)
+    notEqual(testPlaylist.sortTracks, undefined)
+    notEqual(testPlaylist.getOwnerString, undefined)
+
+    // methods invokation results
+    equal(testPlaylist.getDateCreatedString(), test.date_created)
+    equal(testPlaylist.getTracksString(), test.tracks)
+    equal(testPlaylist.getId(), test._id)
+    equal(testPlaylist.getOwnerString(), test.owner)
+    
+    //function tracksCount and addTrack
+    equal(testPlaylist.tracksCount(), 0)
+    equal(testPlaylist.addTrack(dummyTrack1), undefined)
+    equal(testPlaylist.addTrack(dummyTrack2), undefined)
+    equal(testPlaylist.tracksCount(), 2)
+    assert.throws(function() {testPlaylist.addTrack(dummyTrack1)}, /103/)
+    assert.throws(function() {testPlaylist.addTrack('dummy')}, /102/)
+    
+    //function tracksCount and removeTrack
+    equal(testPlaylist.removeTrack(dummyTrack1), undefined)
+    equal(testPlaylist.removeTrack(dummyTrack2), undefined)
+    equal(testPlaylist.tracksCount(), 0)
+    assert.throws(function() {testPlaylist.removeTrack('dummy')}, /102/)
+
+    //check if array tracks is sorted correctly
+    equal(testPlaylist.addTrack(dummyTrack2), undefined)
+    equal(testPlaylist.getTracksString(), "[\"2\"]")
+    equal(testPlaylist.addTrack(dummyTrack1), undefined)
+    equal(testPlaylist.getTracksString(), "[\"1\",\"2\"]")
+    equal(testPlaylist.removeTrack(dummyTrack1), undefined)
+    equal(testPlaylist.removeTrack(dummyTrack2), undefined)
+
+    // toObject
+    deepEqual(testPlaylist.toObject(), test)
+    //toJSON
+    equal(typeof testPlaylist.toJSON(), 'string')
+
+    //defaults
+    var defaultTest = {
+      "_id": '1',
+      'name': 'testName',
+      'owner': '1'
+    }
+    var defaultTestPlaylist = playlist(defaultTest._id, defaultTest.name, undefined, undefined, dummyUser)
+    equal(defaultTestPlaylist.name, defaultTest.name)
+    equal(defaultTestPlaylist.getId(), defaultTest._id)
+    equal(typeof defaultTestPlaylist.getDateCreatedString(), 'string')
+    equal(defaultTestPlaylist.getTracksString(), '[]')
+    equal(defaultTestPlaylist.getOwnerString(), dummyUser.getId())
+
+    //errors
+    assert.throws(function() {playlist(undefined, 'test', [], date, user)}, /100/)
+    assert.throws(function() {playlist([], 'test', [], date, user)}, /101/)
+    assert.throws(function() {playlist('1', undefined, [], date, user)}, /100/)
+    assert.throws(function() {playlist('1', [], [], date, user)}, /101/)
+    assert.throws(function() {playlist('1', 'test', 'dummy', date, user)}, /101/)
+    assert.throws(function() {playlist('1', 'test', [], [], user)}, /101/)
+    assert.throws(function() {playlist('1', 'test', [], date, undefined)}, /100/)
+    assert.throws(function() {playlist('1', 'test', [], [], [])}, /101/)
+  })
+
+  test( "Exercise 2.2: Literal album Constructor", function() {
+    //all fields
+    var date = exampleDate
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]",
+      "artwork": 'www',
+      'label': 'Nice',
+      'artist': '1',
+      "release_date": date
+    }
+
+    var tracks = []
+    var dummyArtist = artist('1', 'John Petrucci', 'Metal', 'www', date)
+
+    var testAlbum = album(test._id, test.name, tracks, test.date_created, dummyArtist, test.artwork, test.release_date, test.label)
+
+    //prototype
+    notEqual(album, undefined)
+
+    var dummyTrack1 = track('1', 'Alive', dummyArtist, 255, 'local')
+    var dummyTrack2 = track('2', 'Everlong', dummyArtist, 255, 'local')
+
+    //check sortTracksFunction
+    equal(testAlbum.sortTracksFunction(dummyTrack1, dummyTrack2), -1)
+    equal(testAlbum.sortTracksFunction(dummyTrack2, dummyTrack1), 1)
+    equal(testAlbum.sortTracksFunction(dummyTrack1, dummyTrack1), 0)
+    assert.throws(function() {testAlbum.sortTracksFunction('dummy',dummyTrack1)}, /102/)
+    assert.throws(function() {testAlbum.sortTracksFunction(dummyTrack1,'dummy')}, /102/)
+
+    //public variables
+    equal(testAlbum.name, test.name)
+    equal(testAlbum.artwork, test.artwork)
+    equal(testAlbum.label, test.label)
+
+    //private variables
+    equal(testAlbum._id, undefined)
+    equal(testAlbum._date_created, undefined)
+    equal(testAlbum._tracks, undefined)
+    equal(testAlbum._artist, undefined)
+    equal(testAlbum._release_date, undefined)
+
+    //public methods
+    notEqual(testAlbum.toJSON, undefined)
+    notEqual(testAlbum.toObject, undefined)
+    notEqual(testAlbum.getDateCreatedString, undefined)
+    notEqual(testAlbum.getTracksString, undefined)
+    notEqual(testAlbum.getId, undefined)
+    notEqual(testAlbum.tracksCount, undefined)
+    notEqual(testAlbum.addTrack, undefined)
+    notEqual(testAlbum.removeTrack, undefined)
+    notEqual(testAlbum.sortTracks, undefined)
+    notEqual(testAlbum.getArtistString, undefined)
+    notEqual(testAlbum.getDateReleaseString, undefined)
+
+    // methods invokation results
+    equal(testAlbum.getDateCreatedString(), test.date_created)
+    equal(testAlbum.getTracksString(), test.tracks)
+    equal(testAlbum.getId(), test._id)
+    equal(testAlbum.getArtistString(), test.artist)
+    equal(testAlbum.getDateReleaseString(), test.release_date)
+
+    //function tracksCount and addTrack
+    equal(testAlbum.tracksCount(), 0)
+    equal(testAlbum.addTrack(dummyTrack1), undefined)
+    equal(testAlbum.addTrack(dummyTrack2), undefined)
+    equal(testAlbum.tracksCount(), 2)
+    assert.throws(function() {testAlbum.addTrack(dummyTrack1)}, /103/)
+    assert.throws(function() {testAlbum.addTrack('dummy')}, /102/)
+    
+    //function tracksCount and removeTrack
+    equal(testAlbum.removeTrack(dummyTrack1), undefined)
+    equal(testAlbum.removeTrack(dummyTrack2), undefined)
+    equal(testAlbum.tracksCount(), 0)
+    assert.throws(function() {testAlbum.removeTrack('dummy')}, /102/)
+
+    //check if array tracks is sorted correctly
+    equal(testAlbum.addTrack(dummyTrack2), undefined)
+    equal(testAlbum.getTracksString(), "[\"2\"]")
+    equal(testAlbum.addTrack(dummyTrack1), undefined)
+    equal(testAlbum.getTracksString(), "[\"1\",\"2\"]")
+    equal(testAlbum.removeTrack(dummyTrack1), undefined)
+    equal(testAlbum.removeTrack(dummyTrack2), undefined)
+
+    // // toObject
+    deepEqual(testAlbum.toObject(), test)
+    // //toJSON
+    equal(typeof testAlbum.toJSON(), 'string')
+
+    //defaults
+    var defaultTest = {
+      "_id": '1',
+      'name': 'testName',
+      "artwork": 'www'
+    }
+    var defaultTestAlbum = album(defaultTest._id, defaultTest.name, undefined, undefined, dummyArtist, defaultTest.artwork)
+    equal(defaultTestAlbum.name, defaultTest.name)
+    equal(defaultTestAlbum.getId(), defaultTest._id)
+    equal(typeof defaultTestAlbum.getDateCreatedString(), 'string')
+    equal(defaultTestAlbum.getTracksString(), '[]')
+    equal(defaultTestAlbum.getArtistString(), dummyArtist.getId())
+    equal(defaultTestAlbum.artwork, defaultTest.artwork)
+    equal(defaultTestAlbum.label, 'USI-INF records')
+    equal(typeof defaultTestAlbum.getDateCreatedString(), 'string')
+    
+    // //errors
+    assert.throws(function() {album(undefined, 'test', [], date, artist, 'www', date, 'label')}, /100/)
+    assert.throws(function() {album([], 'test', [], date, artist, 'www', date, 'label')}, /101/)
+    assert.throws(function() {album('1', undefined, [], date, artist, 'www', date, 'label')}, /100/)
+    assert.throws(function() {album('1', [], [], date, artist, 'www', date, 'label')}, /101/)
+    assert.throws(function() {album('1', 'test', 'dummy', date, artist, 'www', date, 'label')}, /101/)
+    assert.throws(function() {album('1', 'test', [], [], artist, 'www', date, 'label')}, /101/)
+    assert.throws(function() {album('1', 'test', [], date, undefined, 'www', date, 'label')}, /100/)
+    assert.throws(function() {album('1', 'test', [], date, [], 'www', date, 'label')}, /101/)
+    assert.throws(function() {album('1', 'test', [], date, artist, undefined, date, 'label')}, /100/)
+    assert.throws(function() {album('1', 'test', [], date, artist, [], date, 'label')}, /101/)
+    assert.throws(function() {album('1', 'test', [], date, artist, 'www', [], 'label')}, /101/)
+    assert.throws(function() {album('1', 'test', [], date, artist, 'www', date, [])}, /101/)
+  })
+
+  test( "Exercise 2.3: Literal track Constructor", function(){
+    //all fields
+    var date = exampleDate
+    var rosenrot = {
+      'name': 'Rosenrot',
+      '_id': '10',
+      'duration': '3:55',
+      'artist': '11',
+      'collections': '[]',
+      'file': 'local',
+      'id3Tags': '[\"ambient\",\"nice\"]',
+      'release_date': date,
+      'date_created': date
+    }
+    var duration = 235
+    var dummyArtist = artist('11', 'John Petrucci', 'Metal', 'www', date)
+    var collection = []
+    var id3Tags = ['ambient', 'nice']
+
+    var rosenrotTrack = track(rosenrot._id, rosenrot.name, dummyArtist, duration, rosenrot.file, collection, id3Tags, rosenrot.release_date, rosenrot.date_created)
+
+    //prototype
+    notEqual(track, undefined)
+    notEqual(rosenrotTrack.toObject, undefined)
+    notEqual(rosenrotTrack.sortTagsFunction, undefined)
+    notEqual(rosenrotTrack.getDurationString, undefined)
+
+    //check sortTagsFunction
+    equal(rosenrotTrack.sortTagsFunction('a', 'b'), -1)
+    equal(rosenrotTrack.sortTagsFunction('b', 'a'), 1)
+    equal(rosenrotTrack.sortTagsFunction('a', 'a'), 0)
+    assert.throws(function() {rosenrotTrack.sortTagsFunction([],'a')}, /102/)
+    assert.throws(function() {rosenrotTrack.sortTagsFunction('a',[])}, /102/)
+
+    //public variables
+    equal(rosenrotTrack.name, rosenrot.name)
+    equal(rosenrotTrack.getDurationString(), rosenrot.duration)
+
+    //private variables
+    equal(rosenrotTrack._id, undefined)
+    equal(rosenrotTrack._artist, undefined)
+    equal(rosenrotTrack._collections, undefined)
+    equal(rosenrotTrack._file, undefined)
+    equal(rosenrotTrack._id3Tags, undefined)
+    equal(rosenrotTrack._release_date, undefined)
+    equal(rosenrotTrack._date_created, undefined)
+
+    //public methods
+    notEqual(rosenrotTrack.toJSON, undefined)
+    notEqual(rosenrotTrack.toObject, undefined)
+    notEqual(rosenrotTrack.getDurationString, undefined)
+    notEqual(rosenrotTrack.getArtistString, undefined)
+    notEqual(rosenrotTrack.getId3TagsString, undefined)
+    notEqual(rosenrotTrack.getCollectionsString, undefined)
+    notEqual(rosenrotTrack.getDateCreatedString, undefined)
+    notEqual(rosenrotTrack.getDateReleaseString, undefined)
+    notEqual(rosenrotTrack.getId, undefined)
+    notEqual(rosenrotTrack.getFile, undefined)
+    notEqual(rosenrotTrack.id3TagsCount, undefined)
+    notEqual(rosenrotTrack.addTag, undefined)
+    notEqual(rosenrotTrack.removeTag, undefined)
+    notEqual(rosenrotTrack.addCollection, undefined)
+    notEqual(rosenrotTrack.removeCollection, undefined)
+    notEqual(rosenrotTrack.sortTags, undefined)
+
+    // methods invokation results
+    equal(rosenrotTrack.getDurationString(), rosenrot.duration)
+    equal(rosenrotTrack.getArtistString(), rosenrot.artist)
+    equal(rosenrotTrack.getId3TagsString(), rosenrot.id3Tags)
+    equal(rosenrotTrack.getCollectionsString(), rosenrot.collections)
+    equal(rosenrotTrack.getDateCreatedString(), rosenrot.date_created)
+    equal(rosenrotTrack.getDateReleaseString(), rosenrot.release_date)
+    equal(rosenrotTrack.getId(), rosenrot._id)
+    equal(rosenrotTrack.getFile(), rosenrot.file)    
+    
+    //function id3TagsCount and addTag
+    equal(rosenrotTrack.id3TagsCount(), 2)
+    equal(rosenrotTrack.addTag('primo'), undefined)
+    equal(rosenrotTrack.id3TagsCount(), 3)
+    assert.throws(function() {rosenrotTrack.addTag('primo')}, /103/)
+    assert.throws(function() {rosenrotTrack.addTag([])}, /102/)
+    
+    //function id3TagsCount and removeTag
+    equal(rosenrotTrack.removeTag('primo'), undefined)
+    equal(rosenrotTrack.id3TagsCount(), 2)
+    assert.throws(function() {rosenrotTrack.removeTag([])}, /102/)
+
+    //check if array id3Tags is sorted correctly
+    equal(rosenrotTrack.addTag('b'), undefined)
+    equal(rosenrotTrack.addTag('a'), undefined)
+    equal(rosenrotTrack.getId3TagsString(), "[\"a\",\"ambient\",\"b\",\"nice\"]")
+    equal(rosenrotTrack.removeTag('b'), undefined)
+    equal(rosenrotTrack.removeTag('a'), undefined)
+
+    var tracks = []
+    var dummyArtist = artist('1', 'John Petrucci', 'Metal', 'www', date)
+
+    var dummyAlbum1 = album('2', 'test', tracks, date, dummyArtist, 'www', date, 'label')
+    var dummyAlbum2 = album('3', 'test', tracks, date, dummyArtist, 'www', date, 'label')
+
+    //function addCollection
+    equal(rosenrotTrack.addCollection(dummyAlbum1), undefined)
+    equal(rosenrotTrack.getCollectionsString(), "[\"2\"]")
+    equal(rosenrotTrack.addCollection(dummyAlbum2), undefined)
+    equal(rosenrotTrack.getCollectionsString(), "[\"2\",\"3\"]")
+    assert.throws(function() {rosenrotTrack.addCollection(dummyAlbum1)}, /103/)
+    assert.throws(function() {rosenrotTrack.addCollection([])}, /102/)
+    
+    // function removeCollection
+    equal(rosenrotTrack.removeCollection(dummyAlbum2), undefined)
+    equal(rosenrotTrack.getCollectionsString(), "[\"2\"]")
+    equal(rosenrotTrack.removeCollection(dummyAlbum1), undefined)
+    equal(rosenrotTrack.getCollectionsString(), "[]")
+    assert.throws(function() {rosenrotTrack.removeCollection([])}, /102/)
+
+    // toObject
+    deepEqual(rosenrotTrack.toObject(), rosenrot)
+    //toJSON
+    equal(typeof rosenrotTrack.toJSON(), 'string')
+
+    //defaults
+    var everlong = {
+      'name': 'Everlong',
+      '_id': '11',
+      'duration': '4:11',
+      'artist': '11',
+      'file': 'local'
+    }
+    var duration = 251
+    var dummyArtist = artist('11', 'John Petrucci', 'Metal', 'www', exampleDate)
+    var everlongTrack = track(everlong._id, everlong.name, dummyArtist, duration, everlong.file)
+
+    equal(everlongTrack.getCollectionsString(), '[]')
+    equal(everlongTrack.getId3TagsString(), '[]')
+    equal(typeof everlongTrack.getDateCreatedString(), 'string')
+    equal(typeof everlongTrack.getDateReleaseString(), 'string')
+
+    //errors
+    assert.throws(function() {track(undefined, 'everlong', artist, 251, 'local', [], [], date, date)}, /100/)
+    assert.throws(function() {track([], 'everlong', artist, 251, 'local', [], [], date, date)}, /101/)
+    assert.throws(function() {track('1', undefined, artist, 251, 'local', [], [], date, date)}, /100/)
+    assert.throws(function() {track('1', [], artist, 251, 'local', [], [], date, date)}, /101/)
+    assert.throws(function() {track('1', 'everlong', undefined, 251, 'local', [], [], date, date)}, /100/)
+    assert.throws(function() {track('1', 'everlong', [], 251, 'local', [], [], date, date)}, /101/)
+    assert.throws(function() {track('1', 'everlong', artist, undefined, 'local', [], [], date, date)}, /100/)
+    assert.throws(function() {track('1', 'everlong', artist, [], 'local', [], [], date, date)}, /101/)
+    assert.throws(function() {track('1', 'everlong', artist, 251, undefined, [], [], date, date)}, /100/)
+    assert.throws(function() {track('1', 'everlong', artist, 251, [], [], [], date, date)}, /101/)
+    assert.throws(function() {track('1', 'everlong', artist, 251, 'local', 'dummy', [], date, date)}, /101/)
+    assert.throws(function() {track('1', 'everlong', artist, 251, 'local', [], 'dummy', date, date)}, /101/)
+    assert.throws(function() {track('1', 'everlong', artist, 251, 'local', [], [], [], date)}, /101/)
+    assert.throws(function() {track('1', 'everlong', artist, 251, 'local', [], [], date, [])}, /101/)
+  })
+
+  test( "Exercise 2.4: Literal user Constructor", function() {
+    //all fields
+    var date = '' + date
+    var test = {
+      'firstName': 'Jenny',
+      'lastName': 'De Cesarei',
+      'email': 'jenny@asd.com',
+      '_id': '1',
+      'userName': 'girl88',
+      'password': 'hi',
+      'date_created': date,
+      'playlists': '[]' 
+    }
+
+    var playlists = []
+
+    var testUser = user(test._id, test.userName, test.email, test.password, test.firstName, test.lastName, date, playlists)
+    
+    //prototype
+    notEqual(user, undefined)
+    notEqual(testUser.toObject, undefined)
+    notEqual(testUser.sortPlaylistFunction, undefined)
+    notEqual(testUser.getFullName, undefined)
+
+    var dummyPlaylist1 = playlist('1', 'A', undefined, undefined, testUser)
+    var dummyPlaylist2 = playlist('2', 'E', undefined, undefined, testUser)
+
+    //check sortTagsFunction
+    equal(testUser.sortPlaylistFunction(dummyPlaylist1, dummyPlaylist2), -1)
+    equal(testUser.sortPlaylistFunction(dummyPlaylist2, dummyPlaylist1), 1)
+    equal(testUser.sortPlaylistFunction(dummyPlaylist1, dummyPlaylist1), 0)
+    assert.throws(function() {testUser.sortPlaylistFunction([],dummyPlaylist1)}, /102/)
+    assert.throws(function() {testUser.sortPlaylistFunction(dummyPlaylist1,[])}, /102/)
+
+    //public variables
+    equal(testUser.firstName, testUser.firstName)
+    equal(testUser.lastName, testUser.lastName)
+    equal(testUser.email, testUser.email)
+
+    //private variables
+    equal(testUser._id, undefined)
+    equal(testUser._userName, undefined)
+    equal(testUser._password, undefined)
+    equal(testUser._file, undefined)
+    equal(testUser._playlists, undefined)
+    equal(testUser._date_created, undefined)
+
+    //public methods
+    notEqual(testUser.toJSON, undefined)
+    notEqual(testUser.toObject, undefined)
+    notEqual(testUser.getPlaylistsString, undefined)
+    notEqual(testUser.getDateCreatedString, undefined)
+    notEqual(testUser.getFullName, undefined)
+    notEqual(testUser.getId, undefined)
+    notEqual(testUser.getUserName, undefined)
+    notEqual(testUser.getPassword, undefined)
+    notEqual(testUser.playlistsCount, undefined)
+    notEqual(testUser.addPlaylist, undefined)
+    notEqual(testUser.removePlaylist, undefined)
+    notEqual(testUser.sortPlaylist, undefined)
+
+    // methods invokation results
+    equal(testUser.getPlaylistsString(), test.playlists)
+    equal(testUser.getDateCreatedString(), test.date_created)
+    equal(testUser.getFullName(), test.firstName + " " + test.lastName)
+    equal(testUser.getId(), test._id)
+    equal(testUser.getUserName(), test.userName)
+    equal(testUser.getPassword(), test.password)
+    equal(testUser.playlistsCount(), 0)
+    
+    //function playlistsCount and addPlaylist
+    equal(testUser.playlistsCount(), 0)
+    equal(testUser.addPlaylist(dummyPlaylist1), undefined)
+    equal(testUser.playlistsCount(), 1)
+    equal(testUser.addPlaylist(dummyPlaylist2), undefined)
+    equal(testUser.playlistsCount(), 2)
+    assert.throws(function() {testUser.addPlaylist(dummyPlaylist1)}, /103/)
+    assert.throws(function() {testUser.addPlaylist([])}, /102/)
+    
+    //function playlistsCount and removePlaylist
+    equal(testUser.removePlaylist(dummyPlaylist2), undefined)
+    equal(testUser.playlistsCount(), 1)
+    equal(testUser.removePlaylist(dummyPlaylist1), undefined)
+    equal(testUser.playlistsCount(), 0)
+    assert.throws(function() {testUser.removePlaylist([])}, /102/)
+
+    //check if array playlists is sorted correctly
+    equal(testUser.addPlaylist(dummyPlaylist2), undefined)
+    equal(testUser.getPlaylistsString(), "[\"2\"]")
+    equal(testUser.addPlaylist(dummyPlaylist1), undefined)
+    equal(testUser.getPlaylistsString(), "[\"1\",\"2\"]")
+    equal(testUser.removePlaylist(dummyPlaylist2), undefined)
+    equal(testUser.removePlaylist(dummyPlaylist1), undefined)
+
+    // toObject
+    deepEqual(testUser.toObject(), test)
+    //toJSON
+    equal(typeof testUser.toJSON(), 'string')
+
+    //defaults
+    var defaultTest = {
+      'email': 'jenny@asd.com',
+      '_id': '1',
+      'userName': 'girl88',
+      'password': 'hi'
+    }
+    var defaultTestUser = user(test._id, test.userName, test.email, test.password)
+    
+    equal(defaultTestUser.firstName, defaultTest.userName)
+    equal(defaultTestUser.lastName, defaultTest.userName)
+    equal(defaultTestUser.email, defaultTest.email)
+    equal(defaultTestUser.getId(), defaultTest._id)
+    equal(defaultTestUser.getUserName(), defaultTest.userName)
+    equal(defaultTestUser.getPassword(), defaultTest.password)
+    equal(typeof defaultTestUser.getDateCreatedString(), 'string')
+    equal(defaultTestUser.getPlaylistsString(), '[]')
+
+    //errors
+    assert.throws(function() {user(undefined, 'Ergo', 'a@foo.com', 'pim', 'Andrea', 'Galli', date, [])}, /100/)
+    assert.throws(function() {user([], 'Ergo', 'a@foo.com', 'pim', 'Andrea', 'Galli', date, [])}, /101/)
+    assert.throws(function() {user('1', undefined, 'a@foo.com', 'pim', 'Andrea', 'Galli', date, [])}, /100/)
+    assert.throws(function() {user('1', [], 'a@foo.com', 'pim', 'Andrea', 'Galli', date, [])}, /101/)
+    assert.throws(function() {user('1', 'Ergo', undefined, 'pim', 'Andrea', 'Galli', date, [])}, /100/)
+    assert.throws(function() {user('1', 'Ergo', [], 'pim', 'Andrea', 'Galli', date, [])}, /101/)
+    assert.throws(function() {user('1', 'Ergo', 'a@foo.com', undefined, 'Andrea', 'Galli', date, [])}, /100/)
+    assert.throws(function() {user('1', 'Ergo', 'a@foo.com', [], 'Andrea', 'Galli', date, [])}, /101/)
+    assert.throws(function() {user('1', 'Ergo', 'a@foo.com', 'pim', [], 'Galli', date, [])}, /101/)
+    assert.throws(function() {user('1', 'Ergo', 'a@foo.com', 'pim', 'Andrea', [], date, [])}, /101/)
+    assert.throws(function() {user('1', 'Ergo', 'a@foo.com', 'pim', 'Andrea', 'Galli', [], [])}, /101/)
+    assert.throws(function() {user('1', 'Ergo', 'a@foo.com', 'pim', 'Andrea', 'Galli', date, 'dummy')}, /101/)
+  })
+
+  test("Exercise 3.1: Enumerators and the Error function", function(){
+    equal(Object.isFrozen(enumErrorCodes), true);
+
+    equal(enumErrorCodes[100] !== undefined, true)
+    equal(enumErrorCodes[101] !== undefined, true)
+    equal(enumErrorCodes[102] !== undefined, true)
+    equal(enumErrorCodes[103] !== undefined, true)
+    equal(enumErrorCodes[104] !== undefined, true)
+
+    enumErrorCodes[105] = 'test'
+    equal(enumErrorCodes[105] === undefined, true)
+
+    assert.throws(function() {error(100, '')}, /100/)
+    assert.throws(function() {error(101, '')}, /101/)
+    assert.throws(function() {error(102, '')}, /102/)
+    assert.throws(function() {error(103, '')}, /103/)
+    assert.throws(function() {error(104, '')}, /104/)
+  })
+
+  test("Exercise 3.2: Local scope and Global scope", function(){
+    //Artist
+    var date = exampleDate
+    var test = {
+      'name': 'John Petrucci',
+      'artwork': 'www',
+      'genre': 'metal',
+      '_id': '1',
+      'date_created': date
+    }
+    var testArtist = new Artist(test._id, test.name, test.genre, test.artwork, test.date_created)
+    var artistToJSON = testArtist.localToJSON
+    deepEqual(testArtist.localToJSON(), artistToJSON())
+
+    //AbstractSoundCollection
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]"
+    }
+    var tracks = []
+    var testCollection = new AbstractSoundCollection(test._id, test.name, tracks, test.date_created)
+    var collectionToJSON = testCollection.localToJSON
+    deepEqual(testCollection.localToJSON(), collectionToJSON())
+
+    //Playlist
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]",
+      "owner": "1"
+    }
+    var user = new User('1', 'Andrea', 'andrea@lol.com', 'ok')
+    var tracks = []
+    var testPlaylist = new Playlist(test._id, test.name, tracks, test.date_created, user)
+    var playlistToJSON = testPlaylist.localToJSON
+    deepEqual(testPlaylist.localToJSON(), playlistToJSON())
+
+    //Album
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]",
+      "artwork": 'www',
+      'label': 'Nice',
+      'artist': '1',
+      "release_date": date
+    }
+    var tracks = []
+    var artist = new Artist('1', 'John Petrucci', 'Metal', 'www', date)
+    var testAlbum = new Album(test._id, test.name, tracks, test.date_created, artist, test.artwork, test.release_date, test.label)
+    var albumToJSON = testAlbum.localToJSON
+    deepEqual(testAlbum.localToJSON(), albumToJSON())
+
+    //Track
+    var rosenrot = {
+      'name': 'Rosenrot',
+      '_id': '10',
+      'duration': '3:55',
+      'artist': '11',
+      'collections': '[]',
+      'file': 'local',
+      'id3Tags': '[\"ambient\",\"nice\"]',
+      'release_date': date,
+      'date_created': date
+    }
+    var duration = 235
+    var artist = new Artist('11', 'John Petrucci', 'Metal', 'www', date)
+    var collection = []
+    var id3Tags = ['ambient', 'nice']
+    var rosenrotTrack = new Track(rosenrot._id, rosenrot.name, artist, duration, rosenrot.file, collection, id3Tags, rosenrot.release_date, rosenrot.date_created)
+    var trackToJSON = rosenrotTrack.localToJSON
+    deepEqual(rosenrotTrack.localToJSON(), trackToJSON())
+
+    //User
+    var test = {
+      'firstName': 'Jenny',
+      'lastName': 'De Cesarei',
+      'email': 'jenny@asd.com',
+      '_id': '1',
+      'userName': 'girl88',
+      'password': 'hi',
+      'date_created': date,
+      'playlists': '[]' 
+    }
+    var playlists = []
+    var testUser = new User(test._id, test.userName, test.email, test.password, test.firstName, test.lastName, date, playlists)
+    var userToJSON = testUser.localToJSON
+    deepEqual(testUser.localToJSON(), userToJSON())
+  })
+
+  test("Exercise 3.3: Extend sort function", function(){
+    var date = exampleDate
+    var test = {
+      "name": "testCollection",
+      "_id": "1",
+      "date_created": date,
+      "tracks": "[]"
+    }
+
+    var tracks = []
+    var testCollection = new AbstractSoundCollection(test._id, test.name, tracks, test.date_created)
+
+    var artist = new Artist('11', 'John Petrucci', 'Metal', 'www', date)
+    var dummyTrack1 = new Track('1', 'Alive', artist, 255, 'hardisk')
+    var dummyTrack2 = new Track('2', 'Everlong', artist, 255, 'local')
+    var dummyTrack3 = new Track('3', 'Ballet', artist, 255, 'computer')
+    var dummyTrack4 = new Track('0', 'Zoo', artist, 255, 'cloud')
+
+    notEqual(testCollection.sortTracksByField, undefined)
+
+    // not existing field
+    assert.throws(function() {testCollection.sortTracksByField("not exist", dummyTrack1,dummyTrack1)}, /104/)
+
+    // existing fields
+    equal(testCollection.sortTracksByField("name", dummyTrack1,dummyTrack2), -1)
+    equal(testCollection.sortTracksByField("_id", dummyTrack1,dummyTrack2), -1)
+    equal(testCollection.sortTracksByField("_id", dummyTrack1,dummyTrack4), 1)
+    equal(testCollection.sortTracksByField("_file", dummyTrack1,dummyTrack2), -1)
+    equal(testCollection.sortTracksByField("_file", dummyTrack1,dummyTrack3), 1)
+
+    // extended sortTracks
+    notEqual(testCollection.sortTracks, undefined)
+    equal(testCollection.addTrack(dummyTrack1), undefined)
+    equal(testCollection.addTrack(dummyTrack2), undefined)
+    equal(testCollection.addTrack(dummyTrack3), undefined)
+    equal(testCollection.addTrack(dummyTrack4), undefined)
+    equal(testCollection.getTracksString(), "[\"1\",\"3\",\"2\",\"0\"]")
+    equal(testCollection.sortTracks('_id'), undefined)
+    equal(testCollection.getTracksString(), "[\"0\",\"1\",\"2\",\"3\"]")
+    equal(testCollection.sortTracks('_file'), undefined)
+    equal(testCollection.getTracksString(), "[\"0\",\"3\",\"1\",\"2\"]")
+    equal(testCollection.sortTracks('name'), undefined)
+    equal(testCollection.getTracksString(), "[\"1\",\"3\",\"2\",\"0\"]")
+  })
+  </script>
+</body>
+</html>

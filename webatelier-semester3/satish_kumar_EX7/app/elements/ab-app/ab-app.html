@@ -1,0 +1,403 @@
+<link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../../components/iron-pages/iron-pages.html">
+<link rel="import" href="../../components/paper-toast/paper-toast.html">
+<link rel="import" href="../ab-tracklist/ab-tracklist.html">
+<link rel="import" href="../ab-thumblist/ab-thumblist.html">
+<link rel="import" href="../ab-menu/ab-menu.html">
+<link rel="import" href="../ab-menu-item/ab-menu-item.html">
+<link rel="import" href="../../components/paper-input/paper-input.html">
+<link rel="import" href="../../components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../styles/shared-styles.html">
+<link rel="import" href="../../components/iron-icon/iron-icon.html">
+<link rel="import" href="../../components/iron-icon/iron-icon.html">
+<link rel="stylesheet" href="../../css/standardize.css">
+ <link rel="import" href="../ab-player/ab-player.html">
+<link rel="import" href="../../components/iron-input/av-input.html">
+   <link rel="import" href="../../components/iron-icons/av-icons.html">
+<link rel="stylesheet" href="../../css/standardize.css">
+<link rel="stylesheet" href="../../css/glyphicons.css">
+<link rel="import" href="../../components/iron-icons/iron-icons.html">
+<link rel="import" href="../routing.html">
+<link rel="import" href="../../js/utils.js">
+
+<!-- the following script can help you formatting the dates -->
+<script type="text/javascript" src="../../js/utils.js"></script>
+
+
+<dom-module id="ab-app">
+  <template>
+    <style>
+        :host {
+        display: flex;
+        }
+        .container {
+          height:100%;
+        }
+        #main-nav {
+        width: 300px;
+        background: #a44b4d;
+        font-size: 16px;
+        transition: width 150ms ease-out;
+        overflow-y: auto;
+
+        }
+
+        #main-nav h2 {
+        margin: 0;
+        padding: 1em;
+        color: rgba(0, 0, 0, 0.4);
+        font-size: 2em;
+        }
+
+        #main-menu {
+          margin-bottom: 60px;
+        }
+
+        .pageContainer {
+        display: flex;
+        flex: 1;
+        }
+
+        .main-content-float-menu {
+        flex: 1;
+        }
+        .main-content{
+            background: #F0F0F0;
+            flex: 1;
+            overflow-y: auto; 
+          }
+
+        ab-menu.nav-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        line-height: 60px;
+        color: #f7f7f7;
+        }
+
+        a.create-playlist {
+        color: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        width: auto;
+        padding: 2px 5px 4px;
+        margin: 0 0 20px 10px;
+        font-size: 1.2em;
+        line-height: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-decoration: none;
+        }
+        .flex-tracklist {
+            width: 100%;
+            font-weight: 500;
+          }
+          .tracklist {
+            table-layout: fixed;
+            width: 100%;
+            font-weight: 500;
+          }
+          .nav-menu-search{
+            position: relative;
+            z-index: 10;
+            padding-left: 20px;
+            padding-top: 20px;
+            outline: none;
+            border: none;
+            background: transparent;
+            color: #f7f7f7;
+            font-size: 1.4em;
+            font-weight: 300;
+            font-family: 'Lato', Arial, sans-serif;
+            cursor: pointer;
+            width: 100px;
+            
+
+          }
+          .search-item{
+            box-shadow: inset 0 -1px rgba(0,0,0,0.2), inset 0 1px rgba(0,0,0,0.2);
+          }
+
+        .search-item:hover {
+            background: rgba(0,0,0,0.2);
+            box-shadow: inset 0 -1px rgba(0,0,0,0);
+          }
+          .icons{
+            margin: 5px 0px 0px 25px;
+
+          }
+          h1.fat,
+          h2.fat,
+          {
+            font-weight: 700;
+          }
+          #main-nav h2 {
+            margin: 0;
+            padding: 1em;
+            color: rgba(0,0,0,0.4);
+            font-size: 2em;
+          }
+
+          h2{
+            font-family: inherit;
+            font-weight: 500;
+            line-height: 1.1;
+            color: inherit;
+          }
+          
+         
+
+        @media (max-width: 640px) {
+            .pageContainer{
+              flex-direction: column;
+            }
+
+            .main-nav-content{
+              max-height:0;
+            }
+
+            #main-nav{
+              padding: 0 5px;
+              width:100%;
+              height: auto;
+              overflow-y: inherit;
+            }
+
+            .main-nav-float{
+              float:none;
+            }
+
+            #main-nav .logo{
+              display:inline-block;
+              padding: 0.5em;
+
+
+            }
+
+            
+            .main-nav-content, a.create-playlist, .nav-menu{
+              display:none;
+            }
+
+
+            
+          }
+
+
+          @media (min-width: 641px) and (max-width: 840px) {
+            #main-menu-toggle-label, #main-menu-toggle, .mm-user-item{
+              display:none;
+            }
+
+            .logo{
+              display:inline-block;
+              padding: 13px;
+            }
+              #main-nav:hover ~ .main-content-float-menu{
+                margin-left:300px;
+              }
+
+              .main-content-float-menu{
+                 margin-left:60px;
+              }
+
+
+            #main-nav{
+              width:60px;
+              margin-right: 0px;
+            }
+
+             #main-nav:hover {
+              width:300px;
+             }
+            .nav-menu-search{
+              display: none;
+            }
+            
+             #main-nav:hover .nav-menu-search {
+              display:inline-block;
+
+             }
+            /* #main-nav:hover ~ #main-search {
+              display: inline;
+             }*/
+
+
+            .main-content-float-menu{
+              margin-left:60px;
+            }
+
+          
+          }
+
+         /* @media (min-width: 841px) {
+            #main-menu-toggle-label, #main-menu-toggle, .mm-user-item {
+              display:none;
+            }
+          }*/
+
+          h2{
+            margin-top: 20px;
+            margin-bottom: 10px;
+          }
+          h2, .h2 {
+            font-size: 30px;
+          }
+            #main-menu-toggle-label{
+          cursor: pointer;
+          color: rgba(0,0,0,0.4);
+          font-size:32px;
+          display: inline-block;
+          border: 1px solid rgba(0,0,0,0.4);
+          line-height:0;
+          text-align:center;
+          border-radius: 4px;
+          margin:0;
+          padding: 2px 7px 1px;
+        }  
+        #main-menu-toggle-label:hover{
+          color: #F7F7F7;
+          border-color: #F7F7F7;
+        }
+        @media (min-width: 640px){ 
+        #main-menu-toggle-label {
+             display: none;
+          }
+         }
+
+
+        a.create-playlist:hover, a.create-playlist:active{
+          background: rgba(0,0,0,0.2);
+          color: #f7f7f7;
+          text-decoration: 
+          none;
+        }
+        .main-nav-content{
+          margin-bottom: 80px;
+        } 
+         
+         
+    </style>
+    
+    <div class="container main-wrapper pageContainer">
+          <nav id="main-nav" class="main-nav-float">
+
+          <label id="main-menu-toggle-label" for="main-menu-toggle"><iron-icon icon="menu" ></iron-icon></label>
+        <h2 class="fat logo">
+AtelierBeats.</h2>
+        <div class="main-nav-content">
+          <ab-menu id="main-menu" class="nav-menu">
+          
+          <div class="search-item">
+
+           <iron-icon icon="search" class="icons"></iron-icon>
+              
+              <input type="name" placeholder="Search" class="nav-menu-search">
+                          </div>
+        
+        
+            <ab-menu-item href='#!' value="library" iconss="av:library-music"></ab-menu-item>
+            <ab-menu-item href='#!artists' value="artists" iconss="perm-identity"></ab-menu-item>
+            <ab-menu-item href='#!albums' value="albums" iconss="av:album"></ab-menu-item>
+          </ab-menu>
+          
+        </div>
+        <a href="#" class="create-playlist" id="create-pl-btn"><iron-icon icon="add" ></iron-icon> new playlist</a>
+        <iron-ajax
+             auto
+             url="/users"
+             handle-as="json"
+             last-response="{{data}}"
+             on-response="_onDataChange">
+      </iron-ajax>
+         
+      <template is="dom-repeat" items="{{data}}" as="itemss">
+      
+        <ab-menu id="main-menu" class="nav-menu">
+          <ab-menu-item href="#!users/{{itemss._id}}" value="{{itemss.userName}}" iconss="menu"></ab-menu-item>
+
+        </ab-menu>
+        
+       </template>
+       
+      </nav>
+      <!-- /*<style include="shared-styles"></style>*/ -->
+
+        <section class="main-content">
+       <iron-pages class="flex-tracklist tracklist" selected="{{route}}" attr-for-selected="data-route">
+
+        <!--Library Start-->
+        <ab-tracklist data-route="library" value="tracks" iconss="av:library-music">Library</ab-tracklist>
+        <!--Library End-->
+
+        <!--Artists Start-->
+        <ab-thumblist data-route="artists" value="artists" iconss="perm-identity">Artists</ab-thumblist>
+        <!--Artists End-->
+
+        <!--Albums Start-->
+        <ab-thumblist data-route="albums" value="albums" iconss="av:album">Albums</ab-thumblist>
+        <!--Albums End-->
+
+        <!--Playlists Start-->
+        <iron-ajax
+             auto
+             url="/users"
+             handle-as="json"
+             last-response="{{data}}"
+             on-response="_onDataChange">
+      </iron-ajax>
+         
+      
+      <template is="dom-repeat" items="{{data}}" as="itemssss">
+                <ab-tracklist data-route='users' value="users/{{itemssss._id}}/playlists">Playlists</ab-tracklist>
+              
+           
+       </template>
+  
+        <!--Playlists End-->
+      </iron-pages>
+
+      <paper-toast id="toast">
+      </paper-toast>
+      <ab-player></ab-player>
+      </section>
+
+  </div>
+
+  </template>
+
+  <script>
+    (function () {
+      'use strict';
+
+
+
+      Polymer({
+        is: 'ab-app',
+        // setajax: function () {
+        //   this.$.ajax.url = "http://localhost:3000/tracks";
+        //   this.$.ajax.generateRequest();
+        // },
+        scrollPageToTop: function(){
+
+        },
+
+        properties: {
+          route: String, //String
+          params: Object,  //Object
+          items: Object,
+        },
+        _onDataChange:function(){
+           
+        },
+
+        ready: function() {
+          window.abApp = this;
+        },
+        
+      });
+
+    })();
+  </script>
+
+</dom-module>

@@ -1,0 +1,9 @@
+<div class="lighter">
+      <form id="search" action="/address" method="get">
+        <span>
+          <input type="text" name="firstname" id="firstname" class="search img square" placeholder="Firstname" />
+          <input type="text" name="lastname" id="lastname" class="search lastname square" placeholder="Lastname" />
+          <input id="searchbutton" type="submit" value="Search" />
+        </span>
+      </form>
+</div>

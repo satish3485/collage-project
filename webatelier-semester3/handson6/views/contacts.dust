@@ -1,0 +1,25 @@
+<div id="addresses">
+  <h1 class="address-heading">{title}</h1>  
+  {?contacts}  
+  <ul class="address-book" id="address-book">
+   {#contacts}
+   <li class="address-record">
+     <i data-id="{_id}" class="delete">&times;</i>
+     <span class="address-title">{firstname} {lastname}</span>
+     <dl>
+       {?email}<dt class="address-field">email:</dt>
+       <dd class="address-value">{email}</dd> <br />{/email}
+       {?homepage}<dt class="address-field">homepage:</dt>
+       <dd class="address-value">
+         <a href="{homepage}">{homepage}</a>
+       </dd>{/homepage}
+     </dl>
+   </li>
+   {/contacts}  
+ </ul>
+ {:else} 
+ <p>
+  You have no contacts!
+ </p>
+ {/contacts}
+</div>

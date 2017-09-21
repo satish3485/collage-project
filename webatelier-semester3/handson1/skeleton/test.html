@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Javascript HandsOn</title>
+    <link rel="stylesheet" href="resources/qunit.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="script.js" type="text/javascript"></script>
+<script src="resources/qunit.js"></script>
+<script>
+
+    test( "Array equality", function() {
+        var array_equal = create_array_equal();
+        // Task 3.a (Example)
+        var a=[1,2,3],  b = [1,2,3];
+        equal(array_equal(a,b), true, "We expect array a be equal to array b (Same size same elements)" );
+        var a=[1,2],  b = [1,2,3];
+equal(array_equal(a,b), true, "We expect array a be equal to array b (Same size same elements)" );
+var a=[1,2,3],  b = [4,2,3];
+equal(array_equal(a,b), true, "We expect array a be equal to array b (Same size same elements)" );
+var a=[1,2],  b = [1,2,3];
+equal(array_equal(a,b), true, "We expect array a be equal to array b (Same size same elements)" );
+        //Add your tests for Task 3 here
+
+    });
+
+</script>
+
+<script type="text/javascript">
+
+    setTimeout(function(){
+        // Write your code for Task 4 here
+        document.getElementById("qunit-header").innerHTML ="myfirsthandson"
+
+
+
+
+        // Task 7 - Fix the bug of the following code
+        var dom = document.querySelectorAll("#qunit-test-output0 > ol > li");
+        for (var i = 0; i < dom.length; i++) {
+            
+            dom[i].onclick = function(j) {
+                console.log(i)
+                return function(){
+                alert( 'You clicked on #'  +(i++) )}(i);
+            };
+        }
+
+    },1000);
+
+</script>
+
+<script type="text/javascript">
+
+    //Tests for Task 6
+    test( "Multiplier Factory with Closures", function() {
+    	
+        //Default multiplier
+        //The purpose of this test case is to check if the function works when no arguments are passed to multiplier_factory and mult
+        var defaultMult = multiplier_factory();
+        equal(defaultMult(), 0, "We expect the default multiplier to return 0 (Multiplies: 0 * 0)");
+
+        //5 multiplier with default for mult:
+        //The purpose of this test case is to check if the function works when no arguments are passed to mult
+        var mult5 = multiplier_factory(5);
+        equal(mult5(), 0, "We expect the default 5 multiplier to return 0 (Multiplies: 5 * 0)");
+
+        //5 multiplier with no defaults:
+        //The purpose of this test case is to check if the function works when both num1 and num2 are defined.
+        equal(mult5(5), 25, "We expect the 5*5 multiplier to return 25 (Multiplies: 5 * 5)");
+
+        //Self negative multiplier:
+        //The purpose of this test case is to use a function as parameter for mult
+        var negativeMult = function(num) {
+            return -num; 
+        }
+        equal(mult5(negativeMult), -25, "We expect the negative 5 multiplier to return -25 (Multiplies: 5 * -5)");
+    	
+    });
+
+</script>
+<button onclick="refresh()">reload</button>
+</body>
+</html>

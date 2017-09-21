@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head></head>
+<body onload="InitThis();">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+    <div align="center">
+        <canvas id="myCanvas" width="1500px" height="700px" style="border:2px solid black"></canvas>
+        <br /><br />
+        <button onclick="save()">save</button>
+        <button onclick="clearArea()">clean</button>
+        <button onclick="red()">red</button>
+        <button onclick="blue()">blue</button>
+        <button onclick="makePrivate()"><input id='inpu' type="text" name="id"><br> makePrivate</button>
+    </div>
+     </div>
+           <input type="checkbox" id= "checkbox" name="serverControl" value="unChecked" style="width: 40px; height: 40px">
+         </div>
+     <script src="/socket.io/socket.io.js"></script>
+  <script src="js/dust-core.min.js"></script>
+  <script src="js/library.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="views/views.js"></script>
+  <script src="js/ajax.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/socket.js"></script>
+</body>
+</html>

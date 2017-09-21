@@ -1,0 +1,36 @@
+# Hidden Files and Folders #
+############################
+.*
+!/.gitignore
+!/.gitattributes
+
+# Node.js & ASQ #
+#################
+node_modules/
+*.orig
+**/dump.rdb
+
+# IDE Files #
+#############
+*.komodoproject
+.komodotools
+.metadata
+.project
+.idea/*
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db

@@ -1,0 +1,255 @@
+<link rel="import" href="../../components/polymer/polymer.html">
+<link rel="stylesheet" href="../../css/standardize.css">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../../js/utils.js">
+<link rel="stylesheet" href="../../css/glyphicons.css">
+<dom-module id="ab-thumblist">
+<style>
+ /* ---------------- Grid List ---------------- */
+
+          ul.grid-list{
+            list-style:none;
+            margin: 5px; 
+            padding:0;
+          }
+
+          ul.grid-list > li{
+            width: 22.5%;
+            float: left;
+            margin: 10px 0;
+            padding: 0 10px!important;
+          }
+
+          .media-object{
+            height: 100%;
+            position:relative;
+          }
+
+          .mo-image{
+            height: inherit;
+            background-position: center;
+            background-size: cover;
+            height: 100%;
+            padding-bottom: 100%;
+            position: relative;
+            width: 100%;
+            /*border-radius: 500px;*/
+          }
+
+          .mo-overlay{
+            /*border-radius: 500px;*/
+            position:absolute;
+            top:0;
+            left:0;
+            height:100%;
+            width: 100%;
+            box-shadow: inset 0 0 0 200px rgba(0,0,0,0.4);
+            -webkit-transition: all 0.4s ease-in-out;
+            -moz-transition: all 0.4s ease-in-out;
+            -ms-transition: all 0.4s ease-in-out;
+            -o-transition: all 0.4s ease-in-out;
+            transition: all 0.4s ease-in-out;
+          }
+
+          .mo-overlay:hover{
+            box-shadow: inset 0 0 0 0 rgba(0,0,0,0.1);
+          }
+
+          .mo-info{
+            height: 63px;
+            background:rgb(224, 224, 224);
+            padding: 5px 8px;
+          }
+
+          .mo-info.subtitle{
+            height: 90px;
+          }
+
+          .mo-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            border-bottom: 0;
+            line-height: 19px;
+            max-height: 38px;
+          }
+
+          .mo-subtitle, .mo-title {
+            display: block;
+            margin: 0 0 8px;
+            max-width: 100%;
+          }
+
+          .mo-subtitle{
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+         /* @media (max-width: 640px) {
+            ul.grid-list > li{
+              width: %;
+              margin: 5px 0;
+              padding: 0 5px!important;
+            }
+          }*/
+
+       #user-nav{
+          background: #a44b4d;
+          width:100%;
+          height:60px;
+        }
+
+        @media (max-width: 640px) {
+          #user-nav{
+            display:none;
+          }
+        }
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+          }
+          #user-nav{
+             background: #a44b4d;
+             width:100%;
+             height:60px;
+             }
+
+             ul.nav-menu{
+             margin: 0;
+             padding: 0;
+             list-style: none;
+             line-height: 60px;
+             color: #f7f7f7;
+             }
+
+             ul.horizontal-menu li{
+             float: left;
+             }
+
+             ul.nav-menu li > a {
+             display: block;
+             outline: none;
+             text-decoration: none;
+             box-shadow: inset 0 -1px rgba(0,0,0,0.2);
+             text-shadow: 0 0 1px rgba(255,255,255,0.1);
+             font-size: 1.4em;
+             color: #f7f7f7;
+             -webkit-transition: background 0.3s, box-shadow 0.3s;
+             -moz-transition: background 0.3s, box-shadow 0.3s;
+             transition: background 0.3s, box-shadow 0.3s;
+             overflow:hidden;
+             white-space: nowrap;
+             }
+
+             ul.nav-menu li:first-child a, .search-item{
+             box-shadow: inset 0 -1px rgba(0,0,0,0.2), inset 0 1px rgba(0,0,0,0.2);
+             }
+
+             ul.nav-menu li a:hover, .search-item:hover {
+             background: rgba(0,0,0,0.2);
+             box-shadow: inset 0 -1px rgba(0,0,0,0);
+             }
+
+             ul.nav-menu.horizontal-menu li > a{
+             padding: 0 20px;
+             box-shadow: inset -1px 0 rgba(0,0,0,0.2);
+             }
+
+             ul.nav-menu.horizontal-menu li:first-child > a{
+             box-shadow: inset -1px 0 rgba(0,0,0,0.2), inset 1px 0px rgba(0,0,0,0.2);
+             }
+
+             ul.nav-menu.horizontal-menu.float-right li:last-child > a{
+             box-shadow: none;
+             }
+
+             ul.nav-menu.horizontal-menu li > a:hover{
+             background: rgba(0,0,0,0.2);
+             box-shadow: inset 1px 0px rgba(0,0,0,0);
+             }
+
+             .float-right{
+             float:right;
+             } 
+             /*.media-object{
+                height: 100%;
+                position:relative;
+              }*/
+              a{
+  color: #333;
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+  text-decoration: underline;
+}
+
+a:active, a:hover {
+  outline: 0;
+}
+
+a.beats{
+  color: #D35B5D;
+}
+
+
+
+</style>
+  <template>
+    <nav id="user-nav" class="clearfix">
+
+
+        <ul class="nav-menu horizontal-menu float-right clearfix">
+
+          <li><a href="#">triglian</a></li>
+          <li><a href="login.html">logout</a></li>
+        </ul>
+      </nav>
+      <iron-ajax
+             auto
+             url="{{value}}"
+             handle-as="json"
+             last-response="{{data}}"
+             on-response="_onDataChange">
+      </iron-ajax>
+      
+      
+          <ul class="grid-list clearfix">
+        <template is="dom-repeat" items="{{data}}" as="item" >
+        
+    <li>
+    <div class="media-object">
+      <div class="mo-image"><img class="mo-overlay" src={{item.artwork}}></div>
+      <div class="mo-overlay"></div>
+    </div>
+    <div class="mo-info"><a href="artists/{{item.name}}">{{item.name}}</a></div>
+  </li>
+  
+ </template>
+    </ul>
+      </template>
+  
+  <script>
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'ab-thumblist',
+        _onDataChange:function(){
+
+        }
+         
+      });
+
+    })();
+  </script>
+
+</dom-module>

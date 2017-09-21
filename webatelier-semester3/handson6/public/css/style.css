@@ -1,0 +1,114 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+.address-heading {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  color: #666;
+  font-style: italic;
+  font-variant: small-caps;
+  font-size: 24px;
+}
+.address-book {
+  margin: 0;
+  padding: 0;
+}
+.address-record {
+  list-style: none;
+  margin-bottom: 10px;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  width: 300px;
+  padding: 8px 14px 6px 14px;
+}
+.address-record >dl {
+  margin-top: 7px;
+  margin-bottom: 5px;
+}
+.address-record >i{
+  display: inline-block;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  position: relative;
+  float: right;
+  font-size: 15px;
+  font-weight: bold;
+}
+.address-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #943c3c;
+}
+.address-field {
+  color: #9da0a4;
+}
+.address-field {
+  display: inline-block;
+}
+.address-value {
+  display: inline-block;
+  margin: 0;
+}
+.delete {
+  cursor: pointer;
+}
+form{
+  width:500px;
+}
+.search { 
+  padding:6px 15px 6px 30px;
+  margin:3px;
+}
+.lastname { 
+  padding:6px 15px 6px 5px;
+  margin:0px;
+}
+.img { 
+  background: url('../images/search.png') no-repeat 8px 6px; 
+}
+.rounded { 
+  border-radius:15px; 
+  -moz-border-radius:15px; 
+  -webkit-border-radius:15px; 
+}
+input[type=text]{
+  color:#000;
+}
+input[type=submit], input[type=submit]:hover {
+  position:relative; 
+  /*left:-6px;*/
+  border:1px solid #adc5cf;
+  background: #e4f1f9; /* Old browsers */
+  background: -moz-linear-gradient(top, #e4f1f9 0%, #d5e7f3 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e4f1f9), color-stop(100%,#d5e7f3)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #e4f1f9 0%,#d5e7f3 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #e4f1f9 0%,#d5e7f3 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #e4f1f9 0%,#d5e7f3 100%); /* IE10+ */
+  background: linear-gradient(top, #e4f1f9 0%,#d5e7f3 100%); /* W3C */
+  color:blue;
+  cursor: pointer;
+  padding: 6px 10px;
+  font-weight: bold;
+}
+.lighter {
+  width:95%;
+  height:50px;
+}
+.lighter input[type=text]{
+  border:1px solid #d0d0d0;
+  background-color:#fcfcfc;
+}

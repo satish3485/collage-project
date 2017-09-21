@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0">
+  <title>Test - Atelier Beats</title>
+  <link rel="stylesheet" href="resources/qunit.css">
+</head>
+<body>
+  <script src="js/model.js"></script>
+  <script src="resources/qunit.js"></script>
+  <script src="resources/sinon.js"></script>
+  <script src="resources/sinon-qunit.js"></script>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script>
+  QUnit.module("Local Storage", {
+    setup: function(){
+          //clean the local storage
+          delete localStorage.playlists;
+          localStorage.playlists = JSON.stringify({});
+    },
+    teardown: function(){
+          //clean the local storage
+          delete localStorage.playlists;
+    }
+  });
+
+  test( "Playlist Local Storage", function() {
+
+    var pl1 = playlist("pl-1", 'lePlaylist', "lePlayer")
+    notEqual(typeof(pl1), "undefined", "expect pl1 to exist");
+    savePlaylist(pl1);
+
+    var playlists =  JSON.parse(localStorage.playlists);
+    deepEqual( pl1, playlists["pl-1"], "The first playlist should have pl-1 as _id");
+
+    var pl2 = playlist("pl-15", 'lePlaylist2', "lePlayer2")
+    notEqual(typeof(pl2), "undefined", "expect pl2 to exist");
+    savePlaylist(pl2);
+
+    var playlists =  JSON.parse(localStorage.playlists);
+      deepEqual( pl2, playlists["pl-15"], "The second playlist should have pl-15 as _id");
+
+  });
+
+
+  QUnit.module("Fuzzy search", {
+    setup: function(){
+      this.model = [
+        {
+          "_id"          : "t0",
+          "artist"       : "a0",
+          "album"        : "al0",
+          "name"        : "Caught Somewhere in Time",
+        },
+
+        {
+          "_id"          : "t1",
+          "artist"       : "a0",
+          "album"        : "al1",
+          "name"        : "The Clairvoyant",
+        },
+        {
+          "_id"          : "t2",
+          "artist"       : "a1",
+          "album"        : "al2",
+          "name"        : "Thunderstruck",
+        },
+        {
+          "_id"          : "t3",
+          "artist"       : "a1",
+          "album"        : "al3",
+          "name"        : "Hells Bells",
+        },
+        {
+          "_id"          : "t4",
+          "artist"       : "a2",
+          "album"        : "al4",
+          "name"        : "The Call of Ktulu",
+        },
+        {
+          "_id"          : "t5",
+          "artist"       : "a2",
+          "album"        : "al5",
+          "name"        : "Master of Puppets",
+        },
+        {
+          "_id"          : "t6",
+          "artist"       : "a2",
+          "album"        : "al5",
+          "name"        : "Orion",
+        },
+        {
+          "_id"          : "t7",
+          "artist"       : "a3",
+          "album"        : "al6",
+          "name"        : "Raining Blood",
+        },
+        {
+          "_id"          : "t8",
+          "artist"       : "a3",
+          "album"        : "al7",
+          "name"        : "South of Heaven",
+        },
+        {
+          "_id"          : "t9",
+          "artist"       : "a4",
+          "album"        : "al8",
+          "name"        : "All Is Violent, All Is Bright",
+        },
+        {
+          "_id"          : "t10",
+          "artist"       : "a4",
+          "album"        : "al8",
+          "name"        : "A Deafening Distance",
+        }]
+    },
+    teardown: function(){
+          //clean the local storage
+          delete this.model;
+    }
+  });
+
+  test( "Fuzzy search", function() {
+
+    var r1= fuzzyFind(this.model, "artist", 'a')
+    equal(r1.length, 11, "should match all the tracks (11)");
+    for (var i=0, l=this.model.length; i< l; i++){
+      deepEqual(r1[i], this.model[i], "result1[" + i+ "] should match model[" + i+ "]");
+    }
+
+    var r2= fuzzyFind(this.model, "artist", 'a4')
+    equal(r2.length, 2, "should match two tracks");
+    deepEqual(r2[0], this.model[9], "result2[0] should match model[9]");
+    deepEqual(r2[1], this.model[10], "result2[1] should match model[10]");
+
+    var r3= fuzzyFind(this.model, "name", 'Master of Puppets')
+    equal(r3.length, 1, "should match just one track");
+    deepEqual(r3[0], this.model[5], "result3[0] should match model[5]");
+
+    var r4= fuzzyFind(this.model, "name", 'south')
+    equal(r4.length, 1, "should match just one track");
+    deepEqual(r4[0], this.model[8], "result4[0] should match model[8]");
+  });
+
+  </script>
+</body>
+</html>
