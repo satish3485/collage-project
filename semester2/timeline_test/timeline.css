@@ -1,0 +1,146 @@
+.timeline {
+	/* Timeline box, contains entries*/
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+	text-align: center;
+	padding:30px 0 10px 0;
+	height: 400px;
+}
+.timeline::before {
+	/* Bar on top of the timeline */	
+	content:'';
+	border: 2px Solid Gray;
+	display: block;
+	position: absolute;
+	width: 99%;
+}
+.entry {
+	/* Event */
+	display: inline-block;
+	vertical-align: top;
+	background: SteelBlue;
+	border-top: 4px Solid Black;
+	border-radius: 3px;
+	width: 250px;
+	max-height: 75px;
+	white-space: initial;
+	position: relative;
+	margin-top:20px;
+	color: White;
+	padding: 10px;
+	text-decoration: none;
+	transition: max-height 0.5s;
+}
+.entry:hover{
+	max-height: 350px;
+	background:#5BA9EA;
+}
+.entry:visited{
+	background:rgba(130, 130, 130, 0.9);
+}
+.entry::after{
+	/* Connector stick*/
+	content:'';
+	border: 2px Solid Black;
+	left: 50%;
+	top:-19px;
+	display: block;
+	position: absolute;
+	height: 15px;
+}
+.entry::before{
+	/* Tiny circle */
+	content:'';
+	border: 2px Solid Black;
+	left: 50%;
+	top:-27px;
+	display: block;
+	position: absolute;
+	height: 6px;
+	width: 6px;
+	margin-left: -3px;
+	border-radius: 6px; 
+	background: Gray;
+}
+.entry > img {
+	max-width: 0px;
+	margin: 10px;
+	transition: max-width 0.5s;
+}
+.entry:hover > img {
+	max-width: 90%;
+}
+.entry > h1 {
+	font-size: 1.5em;
+	margin: 5px;
+}
+.entry > h2 {
+	font-size: 1.25em;
+	margin: 5px;
+}
+.entry > p {
+	max-height: 0px;
+	transition: max-height 0.5s;
+}
+.entry:hover > p {
+	max-height: 100%;
+}
+
+@media screen and (max-width: 600px){
+	.timeline {
+		overflow-x: hidden;
+		overflow-y: scroll;
+		height: 500px;
+		width: 100%;
+		white-space: initial;
+	}
+	.timeline::before {
+		/* Bar on top of the timeline */	
+		content:'';
+		border: 2px Solid Gray;
+		display: block;
+		position: absolute;
+		left:50%;
+		width:0px;
+		height: 536px;
+		margin-top: -30px;
+	}
+	.entry{
+		border-top: none;
+		max-height:500px;
+		width:250px;
+		margin: 10px;
+		border: none;
+	}
+	.entry:hover{
+		max-height:500px;
+	}
+	.entry:before{
+		display:none;
+	}
+	.entry:after{
+		display:none;
+	}
+	.entry:nth-child(2n+1){
+		float: left;
+		clear: both;
+	}
+	.entry:nth-child(2n){
+		float: right;
+		clear: both;
+	}
+	.entry > img {
+		display: none;
+	}
+	.entry:hover > img {
+		display: none;
+	}
+	.entry > p {
+		max-height: 100%;
+		transition: max-height 1s;
+	}
+	.entry:hover > p {
+		max-height: 100%;
+	}
+}
